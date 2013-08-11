@@ -15,7 +15,9 @@ Spree::Product.class_eval do
     not_deleted.individual_saled.available(args.first)
   }
 
-  attr_accessible :can_be_part, :individual_sale
+  attr_accessible :can_be_part, :individual_sale, :discount
+  
+  after_update :check_auto_assembly_price
 
   # returns the number of inventory units "on_hand" for this product
   def on_hand_with_assembly(reload = false)
@@ -89,4 +91,19 @@ Spree::Product.class_eval do
     ap ? ap.count : 0
   end
 
+  def recalculate_assembly_price
+    my_discount = discount || Spree::ProductAssembly::Config[:default_discount_for_auto_recalc] 
+    part_total = parts.map do |part|
+      part.price * count_of(part)
+    end.sum
+
+    master.update_column(:price, part_total * (1-my_discount/100))
+  end
+
+  def check_auto_assembly_price
+    return unless (assembly? and discount_changed?)
+
+    recalculate_assembly_price
+  end
+  
 end
