@@ -98,6 +98,7 @@ Spree::Product.class_eval do
     end.sum
 
     master.update_column(:price, part_total * (1-my_discount/100))
+    touch
   end
 
   def check_auto_assembly_price
