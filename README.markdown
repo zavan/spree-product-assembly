@@ -9,7 +9,7 @@ Create a product which is composed of other products.
 
 Add the following line to your `Gemfile`
 ```ruby
-gem 'spree_product_assembly', github: 'spree/spree-product-assembly', branch: 'master'
+gem 'spree_product_assembly', github: 'spree/spree-product-assembly', branch: '2-3-stable'
 ```
 
 Run bundle install as well as the extension intall command to copy and run migrations and
@@ -79,4 +79,3 @@ Copyright (c) 2014 [Spree Commerce Inc.][4] and [contributors][5], released unde
 [4]: https://github.com/spree
 [5]: https://github.com/spree/spree-product-assembly/graphs/contributors
 [6]: https://github.com/spree/spree-product-assembly/blob/master/LICENSE.md
-
