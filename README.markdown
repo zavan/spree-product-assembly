@@ -6,7 +6,7 @@ Create a product which is composed of other products.
 
 Add the following line to your Gemfile
 
-    gem "spree_product_assembly", github: "spree/spree-product-assembly"
+    gem "spree_product_assembly", github: "spree/spree-product-assembly", branch: "2-2-stable"
 
 Run bundle install as well as the extension intall command to copy and run migrations and
 append spree_product_assembly to your js manifest file
