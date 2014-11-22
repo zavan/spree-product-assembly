@@ -22,7 +22,7 @@ module Spree
               bundled_items << {
                 product_id: part.sku,
                 name: part.name,
-                quantity: li.count_of(part),
+                quantity: (li.count_of(part) * li.quantity),
                 price: part.price.to_f
               }
             end

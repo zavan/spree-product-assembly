@@ -12,12 +12,17 @@ module Spree
         let(:bundle) { create(:variant) }
         let!(:parts) { (1..2).map { create(:variant) } }
         let!(:bundle_parts) { bundle.product.parts << parts }
-        let!(:line_item) { order.contents.add(bundle, 1) }
+        let!(:line_item) { order.contents.add(bundle, 2) }
         let!(:shipment) { order.create_proposed_shipments.first }
         let(:serialized_shipment) { JSON.parse (AssemblyShipmentSerializer.new(shipment, root: false).to_json) }
 
         it "adds a bundled_items object" do
           expect(serialized_shipment["items"].first["bundled_items"]).to_not be_nil
+        end
+
+        it "properly totals part quantities based on quantity of the bundle ordered" do
+          expect(serialized_shipment["items"][0]['bundled_items'][0]["quantity"].to_s).to eq "2"
+          expect(serialized_shipment["items"][0]['bundled_items'][1]["quantity"].to_s).to eq "2"
         end
       end
 

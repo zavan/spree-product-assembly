@@ -14,6 +14,7 @@ end
 
 group :test do
   gem 'capybara', '~> 2.1.0'
+  gem "codeclimate-test-reporter", require: nil
   gem 'selenium-webdriver', '~> 2.34'
   gem 'spree_wombat', github: 'spree/spree_wombat', branch: '2-2-stable'
 end

@@ -15,21 +15,20 @@
 <%= javascript_tag do %>
   /*!
    * Spree Product Assembly
-   * https://github.com/spree/spree-product-assembly
-   *
+   * https://github.com/spree-contrib/spree-product-assembly
    */
 
   function search_for_parts(){
     $.ajax({
-     data: {q: $("#searchtext").val() }, 
+     data: {q: $("#searchtext").val() },
      dataType: 'html',
      success: function(request){
        jQuery('#search_hits').html(request);
        $('#search_hits').show();
-     }, 
-     type: 'POST', 
+     },
+     type: 'POST',
      url: '<%= available_admin_product_parts_url(@product) %>'
-    });    
+    });
   }
 
   $("#searchtext").keypress(function (e) {
@@ -51,7 +50,7 @@
       params = { count :  $("input", $(this).parent().parent()).val() };
       return make_post_request($(this), params);
     });
-    
+
     $("a.remove_admin_product_part_link").click(function(){
       return make_post_request($(this), {});
     });
