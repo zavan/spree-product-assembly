@@ -1,20 +1,18 @@
 class Spree::Admin::PartsController < Spree::Admin::BaseController
-  before_filter :find_product
+  helper_method :product
 
   def index
-    @parts = @product.parts
+    @parts = product.assemblies_parts
   end
 
   def remove
-    @part = Spree::Variant.find(params[:id])
-    @product.remove_part(@part)
+    assembly_part = Spree::AssembliesPart.find(params[:id])
+    assembly_part.destroy
     render 'spree/admin/parts/update_parts_table'
   end
 
   def set_count
-    @part = Spree::Variant.find(params[:id])
-    @product.set_part_count(@part, params[:count].to_i)
-    render 'spree/admin/parts/update_parts_table'
+    save_part(existing_part_params)
   end
 
   def available
@@ -32,18 +30,34 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
   end
 
   def create
-    @part = Spree::Variant.find(params[:part_id])
-    qty = params[:part_count].to_i
-    @product.add_part(@part, qty) if qty > 0
-    render 'spree/admin/parts/update_parts_table'
+    save_part(new_part_params)
   end
 
   private
-    def find_product
-      @product = Spree::Product.find_by(slug: params[:product_id])
+
+    def save_part(part_params)
+      form = Spree::AssignPartToBundleForm.new(product, part_params)
+      if form.submit
+        render 'spree/admin/parts/update_parts_table'
+      else
+        error_message = form.errors.full_messages.to_sentence
+        render json: error_message.to_json, status: 422
+      end
     end
 
-    def model_class
-      Spree::AssembliesPart
+    def product
+      @product ||= Spree::Product.find_by(slug: params[:product_id])
+    end
+
+    def new_part_params
+      params.require(:assemblies_part).permit(
+        :count,
+        :variant_id,
+        :variant_selection_deferred
+      )
+    end
+
+    def existing_part_params
+      params.permit(:id, :count)
     end
 end

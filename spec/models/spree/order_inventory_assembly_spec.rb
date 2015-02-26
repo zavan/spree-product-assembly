@@ -5,11 +5,11 @@ module Spree
     let(:order) { create(:order_with_line_items) }
     let(:line_item) { order.line_items.first }
     let(:bundle) { line_item.product }
-    let(:parts) { (1..3).map { create(:variant) } }
 
     before do
-      bundle.parts << [parts]
-      bundle.set_part_count(parts.first, 3)
+      create(:assemblies_part, assembly: bundle, count: 3)
+      create(:assemblies_part, assembly: bundle)
+      create(:assemblies_part, assembly: bundle)
 
       line_item.update_attributes!(quantity: 3)
       order.reload.create_proposed_shipments

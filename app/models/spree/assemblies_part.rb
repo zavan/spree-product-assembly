@@ -5,8 +5,18 @@ module Spree
 
     belongs_to :part, :class_name => "Spree::Variant", :foreign_key => "part_id"
 
+    delegate :name, :sku, to: :part
+
     def self.get(assembly_id, part_id)
       find_or_initialize_by(assembly_id: assembly_id, part_id: part_id)
+    end
+
+    def options_text
+      if variant_selection_deferred?
+        Spree.t(:user_selectable)
+      else
+        part.options_text
+      end
     end
   end
 end
