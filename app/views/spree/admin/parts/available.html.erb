@@ -1,14 +1,14 @@
 <h4><%= Spree.t(:available_parts) %></h4>
 <table class="index">
-	<thead>
-		<tr>
-  		<th><%= Spree.t(:name) %></th>
-  		<th><%= Spree.t(:options) %></th>
-  		<th><%= Spree.t(:qty) %></th>
-  		<th></th>
-		</tr>
-	</thead>
-	<tbody>
+  <thead>
+    <tr>
+      <th><%= Spree.t(:name) %></th>
+      <th><%= Spree.t(:options) %></th>
+      <th><%= Spree.t(:qty) %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
     <% @available_products.each do |part| %>
       <tr id="<%= dom_id(part) %>"
         class="<%= "with-variants" if part.has_variants? %>">
@@ -27,13 +27,13 @@
           <% end %>
         </td>
         <td><%= text_field_tag "part[count]", 1 %></td>
-		    <td class="actions">
+        <td class="actions">
           <%= image_tag "spinner.gif", :style => "display:none", :class => "spinner" %>
-		      <%= link_to(icon('add') + ' ' + Spree.t(:select), 
-		                  admin_product_parts_path(product),
+          <%= link_to(icon('add') + ' ' + Spree.t(:select),
+                      admin_product_parts_path(product),
                       :data => { 'target' => dom_id(part), 'master-variant-id' => part.master.id},
-		                  :class => "add_product_part_link") %>
-		    </td>           
+                      :class => "add_product_part_link") %>
+        </td>
       </tr>
     <% end %>
     <% if @available_products.empty? %>

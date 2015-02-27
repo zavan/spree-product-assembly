@@ -48,14 +48,16 @@ module Spree
     end
 
     def assemblies_part
-      if given_id?
-        @assemblies_part ||= Spree::AssembliesPart.find(part_options[:id])
-      else
-        @assemblies_part ||= Spree::AssembliesPart.find_or_initialize_by(
-          variant_selection_deferred: variant_selection_deferred?,
-          assembly_id: product_id,
-          part_id: part_id
-        )
+      @assemblies_part ||= begin
+        if given_id?
+          Spree::AssembliesPart.find(part_options[:id])
+        else
+          Spree::AssembliesPart.find_or_initialize_by(
+            variant_selection_deferred: variant_selection_deferred?,
+            assembly_id: product_id,
+            part_id: part_id
+          )
+        end
       end
     end
   end
