@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "Parts", type: :feature, js: true do
+describe "Managing parts for a product bundle", type: :feature, js: true do
   stub_authorization!
 
   let!(:tshirt) { create(:product, :name => "T-Shirt") }
   let!(:mug) { create(:product, :name => "Mug", can_be_part: true) }
 
-  context "part searching" do
+  context "when searching for parts" do
     before do
       visit spree.admin_product_path(tshirt)
       click_on "Parts"
@@ -19,14 +19,14 @@ describe "Parts", type: :feature, js: true do
       page.should have_content("No Match Found.")
     end
 
-    it "does not find any products" do
+    it "displays no-match feedback when it does not find any products" do
       fill_in "searchtext", with: "Foo"
       click_on "Search"
 
       page.should have_content("No Match Found.")
     end
 
-    it "finds products" do
+    it "shows any products that were found" do
       fill_in "searchtext", with: mug.name
       click_on "Search"
 
@@ -34,8 +34,8 @@ describe "Parts", type: :feature, js: true do
     end
   end
 
-  context "part adding and removing" do
-    it "with only master variant" do
+  context "when adding parts to a bundle" do
+    it "allows adding a product with no variants" do
       visit spree.admin_product_path(tshirt)
       click_on "Parts"
       fill_in "searchtext", with: mug.name
@@ -43,15 +43,9 @@ describe "Parts", type: :feature, js: true do
 
       within("#search_hits") { click_on "Select" }
       page.should have_content(mug.sku)
-
-      within("#product_parts") do
-        find(".remove_admin_product_part_link").click
-
-        page.should_not have_content(mug.sku)
-      end
     end
 
-    context "with multiple variants" do
+    context "when a part has multiple variants" do
       def build_option(options)
         option_type_name = options.fetch(:type)
         option_type = create(:option_type,
@@ -79,7 +73,7 @@ describe "Parts", type: :feature, js: true do
         )
       end
 
-     it "when a specific variant is selected" do
+     it "allows a specific variant to be selected as part of the bundle" do
         bundle = create(:product)
         option = build_option(type: "Color", value: "Red")
         part = build_part_with_options("Shirt", option)
@@ -95,15 +89,9 @@ describe "Parts", type: :feature, js: true do
         end
 
         page.should have_content(part.sku)
-
-        within("#product_parts") do
-          find(".remove_admin_product_part_link").click
-
-          page.should_not have_content(part.sku)
-        end
       end
 
-      it "will allow the end user to select the variant they want" do
+      it "allows admin to specify that user can select any variant" do
         bundle = create(:product)
         option = build_option(type: "Color", value: "Red")
         part = build_part_with_options("Shirt", option)
@@ -127,23 +115,42 @@ describe "Parts", type: :feature, js: true do
           input = find_field("count")
           input[:value].should eq("666")
         end
-
-        within("#product_parts") do
-          find(".remove_admin_product_part_link").click
-
-          page.should_not have_content(part.product.sku)
-        end
       end
     end
   end
 
-  context "updating part quantity" do
+  it "allows parts to be removed from the bundle" do
+    visit spree.admin_product_path(tshirt)
+    click_on "Parts"
+    fill_in "searchtext", with: mug.name
+    click_on "Search"
+
+    within("#search_hits") { click_on "Select" }
+    page.should have_content(mug.sku)
+
+    within("#product_parts") do
+      find(".remove_admin_product_part_link").click
+
+      page.should_not have_content(mug.sku)
+    end
+  end
+
+  context "when updating part quantities" do
     before do
       visit spree.admin_product_path(tshirt)
       click_on "Parts"
       fill_in "searchtext", with: mug.name
       click_on "Search"
       within("#search_hits") { click_on "Select" }
+    end
+
+    it "updates the quantity to match the newly-supplied value" do
+      within("#product_parts") do
+        fill_in "count", with: "5"
+        find(".set_count_admin_product_part_link").click
+
+        expect(find_field('count').value).to eq "5"
+      end
     end
 
     it "rejects a negative quantity" do
@@ -171,15 +178,6 @@ describe "Parts", type: :feature, js: true do
       end
 
       expect(page).to have_content("Quantity must be greater than 0")
-    end
-
-    it "is successful" do
-      within("#product_parts") do
-        fill_in "count", with: "5"
-        find(".set_count_admin_product_part_link").click
-
-        expect(find_field('count').value).to eq "5"
-      end
     end
   end
 end

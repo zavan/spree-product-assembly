@@ -11,7 +11,7 @@ $(document).ready ->
   partsTable = $("#product_parts")
   searchResultsTable = $("#search_hits")
 
-  search_for_parts = ->
+  searchForParts = ->
     productSlug = partsTable.data("product-slug")
     searchUrl = Spree.routes.available_admin_product_parts(productSlug)
 
@@ -27,16 +27,16 @@ $(document).ready ->
 
   $("#searchtext").keypress (e) ->
     if (e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)
-      search_for_parts()
+      searchForParts()
       false
     else
       true
 
   $("#search_parts_button").click (e) ->
     e.preventDefault()
-    search_for_parts()
+    searchForParts()
 
-  make_post_request = (link, post_params) ->
+  makePostRequest = (link, post_params = {}) ->
     spinner = $("img.spinner", link.parent())
     spinner.show()
 
@@ -61,22 +61,22 @@ $(document).ready ->
 
     part.count = quantityField.val()
 
-    if (row.hasClass("with-variants"))
+    if row.hasClass("with-variants")
       selectedVariantOption = $('select option:selected', row)
       part.variant_id = selectedVariantOption.val()
 
-      if (selectedVariantOption.text() == Spree.translations.user_selectable)
+      if selectedVariantOption.text() == Spree.translations.user_selectable
         part.variant_selection_deferred = "t"
         part.variant_id = link.data("master-variant-id")
 
     else
       part.variant_id = $('input[name="part[id]"]', row).val()
 
-    make_post_request(link, {assemblies_part: part})
+    makePostRequest(link, {assemblies_part: part})
 
   partsTable.on "click", "a.set_count_admin_product_part_link", ->
-    params = { count :  $("input", $(this).parent().parent()).val() }
-    make_post_request($(this), params)
+    params = { count: $("input", $(this).parent().parent()).val() }
+    makePostRequest($(this), params)
 
-  partsTable.on "click", "a.remove_admin_product_part_link",  ->
-    make_post_request($(this), {})
+  partsTable.on "click", "a.remove_admin_product_part_link", ->
+    makePostRequest($(this))
