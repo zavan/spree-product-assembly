@@ -1,21 +1,28 @@
-<!-- insert_after '#cart-form' -->
 <% if @product.parts.any?(&:in_stock?) %>
-
+<div class="columns">
   <h6><%= Spree.t(:parts_included) %></h6>
 
   <ul id="products" class="inline product-listing" data-hook>
-    <% @product.parts.each do |variant| %>
+    <% @product.assemblies_parts.each do |part| %>
+      <%- variant = part.part %>
+
       <% if variant.in_stock? %>
         <li id="product_<%= variant.product.id %>" class="columns three <%= cycle("alpha", "secondary", "", "omega secondary") %>" data-hook="products_list_item" itemscope itemtype="http://schema.org/Product">
           <div class="product-image">
             <%= link_to small_image(variant.product, :itemprop => "name"), variant.product %>
           </div>
           <%= link_to truncate(variant.product.name, :length => 50), variant.product, :class => 'info', :itemprop => "name", :title => variant.product.name %>
-          <% if variant.product.individual_sale? %>
-            <span class="price selling" itemprop="price"><%= number_to_currency variant.price %></span>
-          <% end %>
+
+          <%- if part.variant_selection_deferred? %>
+            <%- product = variant.product %>
+            <%= label_tag "options_parts_#{part.id}_variant_id", product.option_types.first.presentation %>
+
+            <%- opts = product.variants.map {|v| [variant_options(v), v.id] } %>
+            <%= select_tag "options[parts][#{part.id}][variant_id]", options_for_select(opts)%>
+          <%- end %>
         </li>
       <% end %>
     <% end %>
   </ul>
+</div>
 <% end %>
