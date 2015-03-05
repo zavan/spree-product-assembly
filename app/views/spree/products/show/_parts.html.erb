@@ -6,7 +6,7 @@
     <% @product.assemblies_parts.each do |part| %>
       <%- variant = part.part %>
 
-      <% if variant.in_stock? %>
+      <% if part.in_stock? %>
         <li id="product_<%= variant.product.id %>" class="columns three <%= cycle("alpha", "secondary", "", "omega secondary") %>" data-hook="products_list_item" itemscope itemtype="http://schema.org/Product">
           <div class="product-image">
             <%= link_to small_image(variant.product, :itemprop => "name"), variant.product %>
@@ -15,10 +15,10 @@
 
           <%- if part.variant_selection_deferred? %>
             <%- product = variant.product %>
-            <%= label_tag "options_parts_#{part.id}_variant_id", product.option_types.first.presentation %>
+            <%= label_tag "options_selected_variants_#{part.id}", Spree.t(:variant) %>
 
             <%- opts = product.variants.map {|v| [variant_options(v), v.id] } %>
-            <%= select_tag "options[parts][#{part.id}][variant_id]", options_for_select(opts)%>
+            <%= select_tag "options[selected_variants][#{part.id}]", options_for_select(opts)%>
           <%- end %>
         </li>
       <% end %>

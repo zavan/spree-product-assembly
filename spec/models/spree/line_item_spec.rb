@@ -67,5 +67,16 @@ module Spree
         line_item.save
       end
     end
+
+    context "removing line items" do
+      it "removes part line items" do
+        line_item = create(:line_item)
+        create(:part_line_item, line_item: line_item)
+
+        line_item.destroy
+
+        expect(Spree::PartLineItem.count).to eq 0
+      end
+    end
   end
 end
