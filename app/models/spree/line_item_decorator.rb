@@ -26,7 +26,13 @@ module Spree
 
     def quantity_by_variant
       if self.product.assembly?
-        {}.tap { |hash| self.product.assemblies_parts.each { |ap| hash[ap.part] = ap.count * self.quantity } }
+        {}.tap do |hash|
+          if self.part_line_items.any?
+            self.part_line_items.each { |ap| hash[ap.variant] = ap.quantity * self.quantity }
+          else
+            self.product.assemblies_parts.each { |ap| hash[ap.part] = ap.count * self.quantity }
+          end
+        end
       else
         { self.variant => self.quantity }
       end

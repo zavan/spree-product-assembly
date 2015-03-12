@@ -26,9 +26,9 @@ module Spree
             if shipment.present?
               remove_from_shipment(shipment, quantity)
             else
-              order.shipments.each do |shipment|
+              order.shipments.each do |shpment|
                 break if quantity == 0
-                quantity -= remove_from_shipment(shipment, quantity)
+                quantity -= remove_from_shipment(shpment, quantity)
               end
             end
           end

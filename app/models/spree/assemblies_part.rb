@@ -7,6 +7,8 @@ module Spree
 
     delegate :name, :sku, to: :part
 
+    after_create :set_master_unlimited_stock
+
     def self.get(assembly_id, part_id)
       find_or_initialize_by(assembly_id: assembly_id, part_id: part_id)
     end
@@ -16,6 +18,14 @@ module Spree
         Spree.t(:user_selectable)
       else
         part.options_text
+      end
+    end
+
+    private
+
+    def set_master_unlimited_stock
+      if part.product.variants.any?
+        part.product.master.update_attribute :track_inventory, false
       end
     end
   end

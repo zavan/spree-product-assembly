@@ -26,27 +26,55 @@ describe Spree::OrderContents do
       end
     end
 
-    xcontext "given parts of an assembly" do
+    context "given parts of an assembly" do
       it "creates a PartLineItem for each part, assigned to the created LineItem" do
         order = create(:order)
-        products = create_list(:product, 2)
+        assembly = create(:product)
+
+        red_option = create(:option_value, presentation: "Red")
+        blue_option = create(:option_value, presentation: "Blue")
+
+        option_type = create(:option_type,
+                             presentation: "Color",
+                             name: "color",
+                             option_values: [
+                               red_option,
+                               blue_option
+                             ])
+
+        keychain = create(:product_in_stock)
+
+        shirt = create(:product_in_stock,
+                       option_types: [option_type],
+                       can_be_part: true)
+
+        create(:variant_in_stock, product: shirt, option_values: [red_option])
+        create(:variant_in_stock, product: shirt, option_values: [blue_option])
+
+        create(:assemblies_part,
+               assembly_id: assembly.id,
+               part_id: keychain.master.id)
+        create(:assemblies_part,
+               assembly_id: assembly.id,
+               part_id: shirt.master.id,
+               variant_selection_deferred: true)
+        assembly.reload
 
         contents = described_class.new(order)
 
-        line_item = contents.add_to_line_item_with_parts(variant, 1, {
-          parts: {
-            products[0].id => { "variant_id" => products[0].master.id },
-            products[1].id => { "variant_id" => products[1].master.id }
+        line_item = contents.add_to_line_item_with_parts(assembly.master, 1, {
+          "selected_variants" => {
+            "#{assembly.assemblies_parts.last.id}" => "#{shirt.variants.last.id}"
           }
         })
 
         part_line_items = line_item.part_line_items
 
         expect(part_line_items[0].line_item_id).to eq line_item.id
-        expect(part_line_items[0].variant_id).to eq products[0].master.id
+        expect(part_line_items[0].variant_id).to eq keychain.master.id
         expect(part_line_items[0].quantity).to eq 1
         expect(part_line_items[1].line_item_id).to eq line_item.id
-        expect(part_line_items[1].variant_id).to eq products[1].master.id
+        expect(part_line_items[1].variant_id).to eq shirt.variants.last.id
         expect(part_line_items[1].quantity).to eq 1
       end
     end
