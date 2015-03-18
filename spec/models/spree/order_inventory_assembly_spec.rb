@@ -12,13 +12,12 @@ module Spree
               )
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
+
               expect(inventory.inventory_units.count).to eq 5
 
-              expect(inventory.inventory_units[0].variant).to eq variants[0]
-              expect(inventory.inventory_units[1].variant).to eq variants[1]
-              inventory.inventory_units[2..4].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
             end
           end
 
@@ -30,23 +29,20 @@ module Spree
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
 
-              line_item.quantity = 2
+              expect(inventory.inventory_units.count).to eq 5
 
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
+
+              line_item.update_column(:quantity, 2)
               inventory.verify(shipment)
 
               expect(inventory.inventory_units.count).to eq 10
 
-              expect(inventory.inventory_units[0].variant).to eq variants[0]
-              expect(inventory.inventory_units[1].variant).to eq variants[1]
-              inventory.inventory_units[2..4].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
-
-              expect(inventory.inventory_units[5].variant).to eq variants[0]
-              expect(inventory.inventory_units[6].variant).to eq variants[1]
-              inventory.inventory_units[7..9].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 6
             end
           end
 
@@ -59,17 +55,20 @@ module Spree
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
 
-              line_item.quantity = 1
+              expect(inventory.inventory_units.count).to eq 10
 
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 6
+
+              line_item.update_column(:quantity, 1)
               inventory.verify(shipment)
 
               expect(inventory.inventory_units.count).to eq 5
 
-              expect(inventory.inventory_units[0].variant).to eq variants[0]
-              expect(inventory.inventory_units[1].variant).to eq variants[1]
-              inventory.inventory_units[2..4].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
             end
           end
         end
@@ -77,7 +76,7 @@ module Spree
         context "when a shipment is not provided" do
           context "when the bundle is created" do
             it "produces inventory units for each item in the bundle" do
-              _shipment, line_item, variants = create_line_item_for_bundle(
+              shipment, line_item, variants = create_line_item_for_bundle(
                 parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
               )
               inventory = OrderInventoryAssembly.new(line_item)
@@ -85,62 +84,60 @@ module Spree
 
               expect(inventory.inventory_units.count).to eq 5
 
-              expect(inventory.inventory_units[0].variant).to eq variants[0]
-              expect(inventory.inventory_units[1].variant).to eq variants[1]
-              inventory.inventory_units[2..4].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
             end
           end
 
           context "when the bundle quantity is increased" do
             it "adds [difference in quantity] sets of inventory units" do
-              _shipment, line_item, variants = create_line_item_for_bundle(
+              shipment, line_item, variants = create_line_item_for_bundle(
                 parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
               )
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify
 
-              line_item.quantity = 2
+              expect(inventory.inventory_units.count).to eq 5
 
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
+
+              line_item.update_column(:quantity, 2)
               inventory.verify
 
               expect(inventory.inventory_units.count).to eq 10
 
-              expect(inventory.inventory_units[0].variant).to eq variants[0]
-              expect(inventory.inventory_units[1].variant).to eq variants[1]
-              inventory.inventory_units[2..4].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
-
-              expect(inventory.inventory_units[5].variant).to eq variants[0]
-              expect(inventory.inventory_units[6].variant).to eq variants[1]
-              inventory.inventory_units[7..9].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 6
             end
           end
 
           context "when the bundle quantity is decreased" do
             it "removes [difference in quantity] sets of inventory units" do
-              _shipment, line_item, variants = create_line_item_for_bundle(
+              shipment, line_item, variants = create_line_item_for_bundle(
                 line_item_quantity: 2,
                 parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
               )
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify
 
-              line_item.quantity = 1
+              expect(inventory.inventory_units.count).to eq 10
 
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 6
+
+              line_item.update_column(:quantity, 1)
               inventory.verify
 
               expect(inventory.inventory_units.count).to eq 5
 
-              expect(inventory.inventory_units[0].variant).to eq variants[0]
-              expect(inventory.inventory_units[1].variant).to eq variants[1]
-              inventory.inventory_units[2..4].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
             end
 
             context "when the bundle is in both shipped and unshipped shipments" do
@@ -156,7 +153,7 @@ module Spree
 
                 inventory = OrderInventoryAssembly.new(line_item)
 
-                line_item.quantity = 1
+                line_item.update_column(:quantity, 1)
                 inventory.verify
 
                 expect(inventory.inventory_units.count).to eq 6
@@ -183,205 +180,73 @@ module Spree
         context "when a shipment is provided" do
           context "when the bundle is created" do
             it "produces inventory units for each item in the bundle" do
-              parts = [
-                { count: 1 },
-                { count: 1 },
-                { count: 3, variant_selection_deferred: true }
-              ]
-              line_item_quantity = 1
-              order = create(:order, completed_at: Time.now)
-              shipment = create(:shipment, order: order)
-              bundle = create(:product, name: "Bundle")
-
-              variants = []
-              assemblies_parts = []
-              parts.each_with_index do |part, i|
-                product = create(:product, name: "Part #{i + 1}")
-                variant = create(:variant, product: product, sku: "PART#{i + 1}")
-                variants << variant
-                assemblies_part_attributes = { assembly: bundle }.merge(part)
-                if part[:variant_selection_deferred]
-                  assemblies_part_attributes[:part] = product.master
-                else
-                  assemblies_part_attributes[:part] = variant
-                end
-                assemblies_parts << create(
-                  :assemblies_part,
-                  assemblies_part_attributes
-                )
-              end
-
-              line_item = create(
-                :line_item,
-                order: order,
-                variant: bundle.master,
-                quantity: line_item_quantity
+              shipment, line_item, variants = create_line_item_for_bundle(
+                parts: [
+                  { count: 1 },
+                  { count: 1 },
+                  { count: 3, variant_selection_deferred: true }
+                ]
               )
-
-              parts.zip(variants).each do |part, variant|
-                create(
-                  :part_line_item,
-                  line_item: line_item,
-                  variant: variant,
-                  quantity: part[:count]
-                )
-              end
-
-              bundle.reload
-              line_item.reload
 
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
 
-              # The bundle itself is part of this count, but is not a shippable
-              # item so will be pulled out when shipments are created
-              expect(inventory.inventory_units.count).to eq 6
-
-              expect(inventory.inventory_units[0].variant).to eq bundle.master
-              expect(inventory.inventory_units[1].variant).to eq variants[0]
-              expect(inventory.inventory_units[2].variant).to eq variants[1]
-              inventory.inventory_units[3..5].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
             end
           end
 
           context "when the bundle quantity is increased" do
             it "adds [difference in quantity] sets of inventory units" do
-              parts = [
-                { count: 1 },
-                { count: 1 },
-                { count: 3, variant_selection_deferred: true }
-              ]
-              line_item_quantity = 1
-              order = create(:order, completed_at: Time.now)
-              shipment = create(:shipment, order: order)
-              bundle = create(:product, name: "Bundle")
-
-              variants = []
-              assemblies_parts = []
-              parts.each_with_index do |part, i|
-                product = create(:product, name: "Part #{i + 1}")
-                variant = create(:variant, product: product, sku: "PART#{i + 1}")
-                variants << variant
-                assemblies_part_attributes = { assembly: bundle }.merge(part)
-                if part[:variant_selection_deferred]
-                  assemblies_part_attributes[:part] = product.master
-                else
-                  assemblies_part_attributes[:part] = variant
-                end
-                assemblies_parts << create(
-                  :assemblies_part,
-                  assemblies_part_attributes
-                )
-              end
-
-              line_item = create(
-                :line_item,
-                order: order,
-                variant: bundle.master,
-                quantity: line_item_quantity
+              shipment, line_item, variants = create_line_item_for_bundle(
+                parts: [
+                  { count: 1 },
+                  { count: 1 },
+                  { count: 3, variant_selection_deferred: true }
+                ]
               )
-
-              parts.zip(variants).each do |part, variant|
-                create(
-                  :part_line_item,
-                  line_item: line_item,
-                  variant: variant,
-                  quantity: part[:count]
-                )
-              end
-
-              bundle.reload
-              line_item.reload
 
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
 
-              line_item.quantity = 2
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
 
+              line_item.update_column(:quantity, 2)
               inventory.verify(shipment)
 
-              expect(inventory.inventory_units.count).to eq 11
-
-              expect(inventory.inventory_units[0].variant).to eq bundle.master
-              expect(inventory.inventory_units[1].variant).to eq variants[0]
-              expect(inventory.inventory_units[2].variant).to eq variants[1]
-              inventory.inventory_units[3..5].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
-              expect(inventory.inventory_units[6].variant).to eq variants[0]
-              expect(inventory.inventory_units[7].variant).to eq variants[1]
-              inventory.inventory_units[8..10].each do |unit|
-                expect(unit.variant).to eq variants[2]
-              end
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 6
             end
           end
 
           context "when the bundle quantity is decreased" do
             it "removes [difference in quantity] sets of inventory units" do
-              parts = [
-                { count: 1 },
-                { count: 1 },
-                { count: 3, variant_selection_deferred: true }
-              ]
-              line_item_quantity = 2
-              order = create(:order, completed_at: Time.now)
-              shipment = create(:shipment, order: order)
-              bundle = create(:product, name: "Bundle")
-
-              variants = []
-              assemblies_parts = []
-              parts.each_with_index do |part, i|
-                product = create(:product, name: "Part #{i + 1}")
-                variant = create(:variant, product: product, sku: "PART#{i + 1}")
-                variants << variant
-                assemblies_part_attributes = { assembly: bundle }.merge(part)
-                if part[:variant_selection_deferred]
-                  assemblies_part_attributes[:part] = product.master
-                else
-                  assemblies_part_attributes[:part] = variant
-                end
-                assemblies_parts << create(
-                  :assemblies_part,
-                  assemblies_part_attributes
-                )
-              end
-
-              line_item = create(
-                :line_item,
-                order: order,
-                variant: bundle.master,
-                quantity: line_item_quantity
+              shipment, line_item, variants = create_line_item_for_bundle(
+                line_item_quantity: 2,
+                parts: [
+                  { count: 1 },
+                  { count: 1 },
+                  { count: 3, variant_selection_deferred: true }
+                ]
               )
-
-              parts.zip(variants).each do |part, variant|
-                create(
-                  :part_line_item,
-                  line_item: line_item,
-                  variant: variant,
-                  quantity: part[:count]
-                )
-              end
-
-              bundle.reload
-              line_item.reload
 
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
 
-              line_item.quantity = 1
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 2
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 6
 
+              line_item.update_column(:quantity, 1)
               inventory.verify(shipment)
 
-              expect(inventory.inventory_units.count).to eq 7
-
-              inventory.inventory_units[0..1].each do |unit|
-                expect(unit.variant).to eq bundle.master
-              end
-              expect(inventory.inventory_units[2].variant).to eq variants[0]
-              expect(inventory.inventory_units[3].variant).to eq variants[1]
-              expect(inventory.inventory_units[4].variant).to eq variants[2]
+              expect(shipment.inventory_units_for(variants[0]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[1]).count).to eq 1
+              expect(shipment.inventory_units_for(variants[2]).count).to eq 3
             end
           end
         end
@@ -395,22 +260,59 @@ module Spree
       shipment = create(:shipment, order: order)
       bundle = create(:product, name: "Bundle")
 
+      red_option = create(:option_value, presentation: "Red")
+      blue_option = create(:option_value, presentation: "Blue")
+
+      option_type = create(:option_type, presentation: "Color",
+                                         name: "color",
+                                         option_values: [
+                                           red_option,
+                                           blue_option
+                                         ])
+
       variants = []
-      parts.each_with_index do |part, i|
-        product = create(:product, name: "Part #{i + 1}")
-        variant = create(:variant, product: product, sku: "PART#{i + 1}")
-        variants << variant
-        create(:assemblies_part, part.merge(assembly: bundle, part: variant))
+      selected_variants = {}
+      parts.each do |part|
+        product_properties = { can_be_part: true }
+        if part[:variant_selection_deferred]
+          product_properties[:option_types] = [option_type]
+        end
+
+        product = create(:product_in_stock, product_properties)
+
+        assemblies_part_attributes = { assembly: bundle }.merge(part)
+
+        if part[:variant_selection_deferred]
+          create(:variant_in_stock, product: product,
+                                    option_values: [red_option])
+          variants << create(:variant_in_stock, product: product,
+                                                sku: "DAVID",
+                                                option_values: [blue_option])
+        else
+          variants << product.master
+        end
+
+        assemblies_part_attributes[:part] = product.master
+        create(:assemblies_part, assemblies_part_attributes)
+
+        if part[:variant_selection_deferred]
+          selected_variants = {
+            "selected_variants" => {
+              "#{bundle.assemblies_parts.last.id}" => "#{variants.last.id}"
+            }
+          }
+        end
       end
 
       bundle.reload
 
-      line_item = create(
-        :line_item,
-        order: order,
-        variant: bundle.master,
-        quantity: line_item_quantity
+      contents = Spree::OrderContents.new(order)
+      line_item = contents.add_to_line_item_with_parts(
+        bundle.master,
+        line_item_quantity,
+        selected_variants
       )
+
       line_item.reload
 
       [shipment, line_item, variants]
