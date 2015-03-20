@@ -1,10 +1,10 @@
 module Spree
   OrderContents.class_eval do
     def add_to_line_item_with_parts(variant, quantity, options = {})
-      add_to_line_item_without_parts(variant, quantity, options).tap do |line_item|
+      add_to_line_item_without_parts(variant, quantity, options).
+        tap do |line_item|
         populate_part_line_items(
           line_item,
-          quantity,
           variant.product.assemblies_parts,
           options["selected_variants"]
         )
@@ -14,7 +14,7 @@ module Spree
 
     private
 
-    def populate_part_line_items(line_item, quantity, parts, selected_variants)
+    def populate_part_line_items(line_item, parts, selected_variants)
       parts.each do |part|
         line_item.part_line_items.create!(
           line_item: line_item,

@@ -3,12 +3,12 @@ require 'spec_helper'
 module Spree
   describe OrderInventoryAssembly do
     describe "#verify" do
-      context "when line item is a bundle that involves variants that are not user-selectable" do
+      context "when line item involves variants that are not user-selectable" do
         context "when a shipment is provided" do
           context "when the bundle is created" do
             it "produces inventory units for each item in the bundle" do
               shipment, line_item, variants = create_line_item_for_bundle(
-                parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
+                parts: [{ count: 1 }, { count: 1 }, { count: 3 }]
               )
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
@@ -24,7 +24,7 @@ module Spree
           context "when the bundle quantity is increased" do
             it "adds [difference in quantity] sets of inventory units" do
               shipment, line_item, variants = create_line_item_for_bundle(
-                parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
+                parts: [{ count: 1 }, { count: 1 }, { count: 3 }]
               )
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
@@ -50,7 +50,7 @@ module Spree
             it "removes [difference in quantity] sets of inventory units" do
               shipment, line_item, variants = create_line_item_for_bundle(
                 line_item_quantity: 2,
-                parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
+                parts: [{ count: 1 }, { count: 1 }, { count: 3 }]
               )
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify(shipment)
@@ -77,10 +77,10 @@ module Spree
           context "when the bundle is created" do
             it "produces inventory units for each item in the bundle" do
               shipment, line_item, variants = create_line_item_for_bundle(
-                parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
+                parts: [{ count: 1 }, { count: 1 }, { count: 3 }]
               )
               inventory = OrderInventoryAssembly.new(line_item)
-              inventory.verify()
+              inventory.verify
 
               expect(inventory.inventory_units.count).to eq 5
 
@@ -93,7 +93,7 @@ module Spree
           context "when the bundle quantity is increased" do
             it "adds [difference in quantity] sets of inventory units" do
               shipment, line_item, variants = create_line_item_for_bundle(
-                parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
+                parts: [{ count: 1 }, { count: 1 }, { count: 3 }]
               )
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify
@@ -119,7 +119,7 @@ module Spree
             it "removes [difference in quantity] sets of inventory units" do
               shipment, line_item, variants = create_line_item_for_bundle(
                 line_item_quantity: 2,
-                parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
+                parts: [{ count: 1 }, { count: 1 }, { count: 3 }]
               )
               inventory = OrderInventoryAssembly.new(line_item)
               inventory.verify
@@ -140,11 +140,13 @@ module Spree
               expect(shipment.inventory_units_for(variants[2]).count).to eq 3
             end
 
-            context "when the bundle is in both shipped and unshipped shipments" do
-              it "removes the items in the bundle from only the unshipped shipments" do
-                unshipped_shipment, line_item, variants = create_line_item_for_bundle(
+            context "when the bundle has shipped and unshipped shipments" do
+              it "removes the items from only the unshipped shipments" do
+                unshipped_shipment,
+                line_item,
+                variants = create_line_item_for_bundle(
                   line_item_quantity: 2,
-                  parts: [ { count: 1 }, { count: 1 }, { count: 3 } ]
+                  parts: [{ count: 1 }, { count: 1 }, { count: 3 }]
                 )
                 shipped_shipment = create(:shipment, state: 'shipped')
                 InventoryUnit.all[0..2].each do |unit|
@@ -176,7 +178,7 @@ module Spree
         end
       end
 
-      context "when line item is a bundle that involves user-selectable variants" do
+      context "when line item involves user-selectable variants" do
         context "when a shipment is provided" do
           context "when the bundle is created" do
             it "produces inventory units for each item in the bundle" do
@@ -286,7 +288,6 @@ module Spree
           create(:variant_in_stock, product: product,
                                     option_values: [red_option])
           variants << create(:variant_in_stock, product: product,
-                                                sku: "DAVID",
                                                 option_values: [blue_option])
         else
           variants << product.master
@@ -312,7 +313,6 @@ module Spree
         line_item_quantity,
         selected_variants
       )
-
       line_item.reload
 
       [shipment, line_item, variants]

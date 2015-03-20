@@ -3,20 +3,16 @@ require "spec_helper"
 describe "Updating items in the cart", type: :feature do
   context "when updating a bundle's quantity" do
     context "when none of the bundle items are packs or have options" do
-      specify "the quantities of the items are multiplied by the bundle's new quantity" do
+      specify "the quantities are multiplied by the bundle's new quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
-        keychain = create(
-          :product_in_stock,
-          name: "Keychain",
-          sku: "KEYCHAIN",
-          can_be_part: true
-        )
-        shirt = create(
-          :product_in_stock,
-          name: "Shirt",
-          sku: "SHIRT",
-          can_be_part: true
-        )
+
+        keychain = create(:product_in_stock, name: "Keychain",
+                                             sku: "KEYCHAIN",
+                                             can_be_part: true)
+        shirt = create(:product_in_stock, name: "Shirt",
+                                          sku: "SHIRT",
+                                          can_be_part: true)
+
         add_part_to_bundle(bundle, keychain.master)
         add_part_to_bundle(bundle, shirt.master)
 
@@ -30,32 +26,30 @@ describe "Updating items in the cart", type: :feature do
 
         click_button "update-button"
 
-        within("#cart-detail") do
-          within("tbody tr:first-child") do
-            expect(page).to have_content(bundle.name)
-            expect(page).to have_css("input[value='2']")
-            expect(page).to have_content("(2) Keychain (KEYCHAIN)")
-            expect(page).to have_content("(2) Shirt (SHIRT)")
-           end
+        within("#cart-detail tbody tr:first-child") do
+          expect(page).to have_content(bundle.name)
+          expect(page).to have_css("input[value='2']")
+          expect(page).to have_content("(2) Keychain (KEYCHAIN)")
+          expect(page).to have_content("(2) Shirt (SHIRT)")
         end
       end
     end
 
     context "when one of the variants is a pack" do
-      specify "the pack's quantity is multiplied by the bundle's new quantity" do
+      specify "the pack quantity is multiplied by the bundle's new quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
-        keychain = create(
-          :product_in_stock,
-          name: "Keychain",
-          sku: "KEYCHAIN",
-          can_be_part: true
-        )
+
+        keychain = create(:product_in_stock, name: "Keychain",
+                                             sku: "KEYCHAIN",
+                                             can_be_part: true)
+
         _shirt, shirts_by_size = create_bundle_product_with_options(
           name: "Shirt",
           sku: "SHIRT",
           option_type: "Size",
           option_values: ["Small"]
         )
+
         add_part_to_bundle(bundle, keychain.master, count: 2)
         add_part_to_bundle(bundle, shirts_by_size["small"])
 
@@ -69,32 +63,30 @@ describe "Updating items in the cart", type: :feature do
 
         click_button "update-button"
 
-        within("#cart-detail") do
-          within("tbody tr:first-child") do
-            expect(page).to have_content(bundle.name)
-            expect(page).to have_css("input[value='2']")
-            expect(page).to have_content("(4) Keychain (KEYCHAIN)")
-            expect(page).to have_content("(2) Shirt (Size: Small) (SHIRT-SMALL)")
-          end
+        within("#cart-detail tbody tr:first-child") do
+          expect(page).to have_content(bundle.name)
+          expect(page).to have_css("input[value='2']")
+          expect(page).to have_content("(4) Keychain (KEYCHAIN)")
+          expect(page).to have_content("(2) Shirt (Size: Small) (SHIRT-SMALL)")
         end
       end
     end
 
-    context "when one of the bundle items has a variant (that is not user-selectable)" do
-      specify "the variants quantity is multiplied by the bundle's new quantity" do
+    context "when a bundle items has a variant (that is not user-selectable)" do
+      specify "the variant quantity is multiplied by the new bundle quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
-        keychain = create(
-          :product_in_stock,
-          name: "Keychain",
-          sku: "KEYCHAIN",
-          can_be_part: true
-        )
+
+        keychain = create(:product_in_stock, name: "Keychain",
+                                             sku: "KEYCHAIN",
+                                             can_be_part: true)
+
         _shirt, shirts_by_size = create_bundle_product_with_options(
           name: "Shirt",
           sku: "SHIRT",
           option_type: "Size",
           option_values: ["Small"]
         )
+
         add_part_to_bundle(bundle, keychain.master)
         add_part_to_bundle(bundle, shirts_by_size["small"])
 
@@ -108,32 +100,30 @@ describe "Updating items in the cart", type: :feature do
 
         click_button "update-button"
 
-        within("#cart-detail") do
-          within("tbody tr:first-child") do
-            expect(page).to have_content(bundle.name)
-            expect(page).to have_css("input[value='2']")
-            expect(page).to have_content("(2) Keychain (KEYCHAIN)")
-            expect(page).to have_content("(2) Shirt (Size: Small) (SHIRT-SMALL)")
-           end
+        within("#cart-detail tbody tr:first-child") do
+          expect(page).to have_content(bundle.name)
+          expect(page).to have_css("input[value='2']")
+          expect(page).to have_content("(2) Keychain (KEYCHAIN)")
+          expect(page).to have_content("(2) Shirt (Size: Small) (SHIRT-SMALL)")
         end
       end
     end
 
     context "when one of the bundle items has a user-selectable variant" do
-      specify "the variants quantity is multiplied by the bundle's new quantity" do
+      specify "the variant quantity is multiplied by the new bundle quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
-        keychain = create(
-          :product_in_stock,
-          name: "Keychain",
-          sku: "KEYCHAIN",
-          can_be_part: true
-        )
+
+        keychain = create(:product_in_stock, name: "Keychain",
+                                             sku: "KEYCHAIN",
+                                             can_be_part: true)
+
         shirt, _shirts_by_size = create_bundle_product_with_options(
           name: "Shirt",
           sku: "SHIRT",
           option_type: "Size",
           option_values: ["Small", "Medium"]
         )
+
         add_part_to_bundle(bundle, keychain.master, count: 1)
         add_part_to_bundle(
           bundle,
@@ -153,13 +143,13 @@ describe "Updating items in the cart", type: :feature do
 
         click_button "update-button"
 
-        within("#cart-detail") do
-          within("tbody tr:first-child") do
-            expect(page).to have_content(bundle.name)
-            expect(page).to have_css("input[value='2']")
-            expect(page).to have_content("(2) Keychain (KEYCHAIN)")
-            expect(page).to have_content("(2) Shirt (Size: Medium) (SHIRT-MEDIUM)")
-           end
+        within("#cart-detail tbody tr:first-child") do
+          expect(page).to have_content(bundle.name)
+          expect(page).to have_css("input[value='2']")
+          expect(page).to have_content("(2) Keychain (KEYCHAIN)")
+          expect(page).to(
+            have_content("(2) Shirt (Size: Medium) (SHIRT-MEDIUM)")
+          )
         end
       end
     end
@@ -171,19 +161,23 @@ describe "Updating items in the cart", type: :feature do
     option_values = option_value_presentations.map do |presentation|
       create(:option_value, presentation: presentation)
     end
-    option_type = create(
-      :option_type,
+    option_type = create(:option_type,
       presentation: option_type_presentation,
       name: option_type_presentation.downcase,
-      option_values: option_values
-    )
+      option_values: option_values)
     product_attributes = args.slice(:name, :sku).merge(
       option_types: [option_type],
       can_be_part: true
     )
     product = create(:product, product_attributes)
 
-    variants_by_option = option_values.each_with_object({}) do |value, hash|
+    variants = variants_by_option(product, option_values)
+
+    [product, variants]
+  end
+
+  def variants_by_option(product, option_values)
+    option_values.each_with_object({}) do |value, hash|
       hash[value.presentation.downcase] = create(
         :variant_in_stock,
         product: product,
@@ -191,8 +185,6 @@ describe "Updating items in the cart", type: :feature do
         option_values: [value]
       )
     end
-
-    [product, variants_by_option]
   end
 
   def add_part_to_bundle(bundle, variant, options = {})

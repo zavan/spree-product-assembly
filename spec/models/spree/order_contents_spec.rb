@@ -3,7 +3,7 @@ require "spec_helper"
 describe Spree::OrderContents do
   describe "#add_to_line_item" do
     context "given a variant which is an assembly" do
-      it "creates a PartLineItem for each part of the assembly, assigned to the created LineItem" do
+      it "creates a PartLineItem for each part of the assembly" do
         order = create(:order)
         assembly = create(:product)
         pieces = create_list(:product, 2)
@@ -27,7 +27,7 @@ describe Spree::OrderContents do
     end
 
     context "given parts of an assembly" do
-      it "creates a PartLineItem for each part, assigned to the created LineItem" do
+      it "creates a PartLineItem for each part" do
         order = create(:order)
         assembly = create(:product)
 
@@ -60,7 +60,7 @@ describe Spree::OrderContents do
                variant_selection_deferred: true)
         assembly.reload
 
-        contents = described_class.new(order)
+        contents = Spree::OrderContents.new(order)
 
         line_item = contents.add_to_line_item_with_parts(assembly.master, 1, {
           "selected_variants" => {

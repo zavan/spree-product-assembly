@@ -6,7 +6,7 @@ module Spree
       context "when given a quantity < 1" do
         it "is invalid" do
           product = build(:product)
-          part_options = {count: -1}
+          part_options = { count: -1 }
 
           command = AssignPartToBundleForm.new(product, part_options)
 
@@ -14,7 +14,7 @@ module Spree
         end
       end
 
-      context "when given options for an existing assembly assignment" do
+      context "when given options for an existing assembly" do
         it "updates attributes on the existing assignment" do
           bundle = create(:product)
           part = create(:product, can_be_part: true)
@@ -24,7 +24,7 @@ module Spree
             part_id: part.id
           )
 
-          part_options = {count: 2, id: assignment.id}
+          part_options = { count: 2, id: assignment.id }
 
           command = AssignPartToBundleForm.new(bundle, part_options)
           command.submit
@@ -34,16 +34,16 @@ module Spree
         end
       end
 
-      context "when given options for an assembly assignment that does not exist" do
+      context "when given options for an assembly that does not exist" do
         it "creates a new assembly part assignment with the provided options" do
           bundle = create(:product)
           part = create(:product, can_be_part: true)
 
-          part_options = {count: 2, variant_id: part.id}
+          part_options = { count: 2, variant_id: part.id }
 
           command = AssignPartToBundleForm.new(bundle, part_options)
 
-          expect { command.submit }.to change {AssembliesPart.count}.by(1)
+          expect { command.submit }.to change { AssembliesPart.count }.by(1)
         end
       end
     end
