@@ -11,4 +11,5 @@ en:
     product_bundles: Product Bundles
     parts_included: Parts included
     part_of_bundle: 'Part of bundle %{sku}'
+    selected_quantity_not_available: Selected quantity not available
     user_selectable: User Selectable

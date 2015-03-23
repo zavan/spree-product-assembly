@@ -22,7 +22,9 @@ module Spree
         end
 
         it "doesn't save line item quantity" do
-          expect { order.contents.add(variant, 10) }.to raise_error ActiveRecord::RecordInvalid
+          expect { order.contents.add(variant, 10) }.to(
+            raise_error ActiveRecord::RecordInvalid
+          )
         end
       end
 
@@ -52,7 +54,9 @@ module Spree
       end
 
       it "verifies inventory units via OrderInventoryAssembly" do
-        OrderInventoryAssembly.should_receive(:new).with(line_item).and_return(inventory)
+        OrderInventoryAssembly.should_receive(:new).
+          with(line_item).
+          and_return(inventory)
         inventory.should_receive(:verify).with(line_item.target_shipment)
         line_item.quantity = 2
         line_item.save
@@ -61,10 +65,23 @@ module Spree
 
     context "updates regular line item" do
       it "verifies inventory units via OrderInventory" do
-        OrderInventory.should_receive(:new).with(line_item.order, line_item).and_return(inventory)
+        OrderInventory.should_receive(:new).
+          with(line_item.order, line_item).
+          and_return(inventory)
         inventory.should_receive(:verify).with(line_item.target_shipment)
         line_item.quantity = 2
         line_item.save
+      end
+    end
+
+    context "removing line items" do
+      it "removes part line items" do
+        line_item = create(:line_item)
+        create(:part_line_item, line_item: line_item)
+
+        line_item.destroy
+
+        expect(Spree::PartLineItem.count).to eq 0
       end
     end
   end
