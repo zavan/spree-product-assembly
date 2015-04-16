@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Parts", js: true do
+describe "Parts", type: :feature, js: true do
   stub_authorization!
 
   let!(:tshirt) { create(:product, :name => "T-Shirt") }
@@ -21,6 +21,8 @@ describe "Parts", js: true do
     within("#search_hits") { click_on "Select" }
     page.should have_content(mug.sku)
 
-    within("#product_parts") { click_on "Remove" }
+    within("#product_parts") do
+      find(".remove_admin_product_part_link").click
+    end
   end
 end
