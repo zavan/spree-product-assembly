@@ -54,8 +54,8 @@
                   :title => Spree.t('actions.cancel'), :style => 'display: none' %>
                 <%= link_to '', '#', :class => 'edit-line-item fa fa-edit no-text with-tip',
                   :title => Spree.t('edit') %>
-                <%= link_to '', [:admin, @order, item], :class => 'delete-line-item fa fa-trash no-text with-tip',
-                  data: { confirm: Spree.t(:are_you_sure) }, :title => Spree.t('delete') %>
+                <%= link_to '', 'javascript:void()', :class => 'delete-line-item fa fa-trash no-text with-tip',
+                  data: { confirm: Spree.t(:are_you_sure), 'line-item-id' => item.id }, :title => Spree.t('delete') %>
               <% end %>
             <% end %>
           </td>
