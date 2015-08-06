@@ -16,33 +16,25 @@ describe "Orders", type: :feature, js: true do
   end
 
   it "allows admin to edit product bundle" do
-    change_orders_item_quantity_to 2
-
-    visit spree.edit_admin_order_path(order)
-
-    verify_3_parts_have_their_quantity_set_to 2
-  end
-
-  def change_orders_item_quantity_to(n)
     visit spree.edit_admin_order_path(order)
 
     within("table.product-bundles") do
       find(".edit-line-item").click
-      fill_in "quantity", with: n
+      fill_in "quantity", with: 2
       find(".save-line-item").click
     end
 
     wait_for_ajax
-  end
 
-  def verify_3_parts_have_their_quantity_set_to(n)
+    visit spree.edit_admin_order_path(order)
+
     within("table.stock-contents") do
       stock_quantities = all(".item-qty-show").map(&:text)
 
       expect(stock_quantities).to match [
-        "#{n} x backordered",
-        "#{n} x backordered",
-        "#{n} x backordered"
+        "2 x backordered",
+        "2 x backordered",
+        "2 x backordered"
       ]
     end
   end
