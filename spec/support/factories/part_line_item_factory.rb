@@ -1,4 +1,4 @@
-require "factory_girl"
+require 'factory_girl'
 
 FactoryGirl.define do
   factory :part_line_item, class: "Spree::PartLineItem" do
