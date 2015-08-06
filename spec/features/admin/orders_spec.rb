@@ -28,7 +28,7 @@ describe "Orders", type: :feature, js: true do
 
     within("table.product-bundles") do
       find(".edit-line-item").click
-      fill_in "quantity", with: n.to_s
+      fill_in "quantity", with: n
       find(".save-line-item").click
     end
 
