@@ -51,6 +51,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.include WaitForAjax, type: :feature
   config.include FactoryGirl::Syntax::Methods
   config.include Spree::TestingSupport::UrlHelpers
 end
