@@ -11,8 +11,18 @@ describe Spree::Product do
       @product = create(:product)
       @part1 = create(:product, :can_be_part => true)
       @part2 = create(:product, :can_be_part => true)
-      @product.add_part @part1.master, 1
-      @product.add_part @part2.master, 4
+
+      create(:assemblies_part,
+        assembly: @product,
+        part: @part1.master,
+        count: 1
+      )
+      create(:assemblies_part,
+        assembly: @product,
+        part: @part2.master,
+        count: 4
+      )
+      @product.reload
     end
     
     it "is an assembly" do
@@ -25,11 +35,6 @@ describe Spree::Product do
       @product.can_be_part = true
       @product.valid?
       @product.errors[:can_be_part].should == ["assembly can't be part"]
-    end
-
-    it 'changing part qty changes count on_hand' do
-      @product.set_part_count(@part2.master, 2)
-      @product.count_of(@part2.master).should == 2
     end
   end
 end

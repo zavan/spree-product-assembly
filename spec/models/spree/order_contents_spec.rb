@@ -1,38 +1,81 @@
-require 'spec_helper'
+require "spec_helper"
 
-module Spree
-  describe OrderContents do
-    let(:order) { Order.create }
+describe Spree::OrderContents do
+  describe "#add_to_line_item" do
+    context "given a variant which is an assembly" do
+      it "creates a PartLineItem for each part of the assembly" do
+        order = create(:order)
+        assembly = create(:product)
+        pieces = create_list(:product, 2)
+        pieces.each do |piece|
+          create(:assemblies_part, assembly: assembly, part: piece.master)
+        end
 
-    let(:guitar) { create(:variant) }
-    let(:bass) { create(:variant) }
+        contents = described_class.new(order)
 
-    let(:bundle) { create(:product) }
+        line_item = contents.add_to_line_item_with_parts(assembly.master, 1)
 
-    subject { OrderContents.new(order) }
+        part_line_items = line_item.part_line_items
 
-    before { bundle.parts.push [guitar, bass] }
-
-    context "same variant within bundle and as regular product" do
-      let!(:guitar_item) { subject.add(guitar, 3) }
-      let!(:bundle_item) { subject.add(bundle.master, 5) }
-
-      it "destroys the variant as regular product only" do
-        subject.remove(guitar, 3)
-        expect(order.reload.line_items.to_a).to eq [bundle_item]
+        expect(part_line_items[0].line_item_id).to eq line_item.id
+        expect(part_line_items[0].variant_id).to eq pieces[0].master.id
+        expect(part_line_items[0].quantity).to eq 1
+        expect(part_line_items[1].line_item_id).to eq line_item.id
+        expect(part_line_items[1].variant_id).to eq pieces[1].master.id
+        expect(part_line_items[1].quantity).to eq 1
       end
+    end
 
-      context "completed order" do
-        before do
-          order.create_proposed_shipments
-          order.touch :completed_at
-        end
+    context "given parts of an assembly" do
+      it "creates a PartLineItem for each part" do
+        order = create(:order)
+        assembly = create(:product)
 
-        it "destroys accurate number of inventory units" do
-          expect {
-            subject.remove(guitar, 3)
-          }.to change { InventoryUnit.count }.by(-3)
-        end
+        red_option = create(:option_value, presentation: "Red")
+        blue_option = create(:option_value, presentation: "Blue")
+
+        option_type = create(:option_type,
+                             presentation: "Color",
+                             name: "color",
+                             option_values: [
+                               red_option,
+                               blue_option
+                             ])
+
+        keychain = create(:product_in_stock)
+
+        shirt = create(:product_in_stock,
+                       option_types: [option_type],
+                       can_be_part: true)
+
+        create(:variant_in_stock, product: shirt, option_values: [red_option])
+        create(:variant_in_stock, product: shirt, option_values: [blue_option])
+
+        create(:assemblies_part,
+               assembly_id: assembly.id,
+               part_id: keychain.master.id)
+        create(:assemblies_part,
+               assembly_id: assembly.id,
+               part_id: shirt.master.id,
+               variant_selection_deferred: true)
+        assembly.reload
+
+        contents = Spree::OrderContents.new(order)
+
+        line_item = contents.add_to_line_item_with_parts(assembly.master, 1, {
+          "selected_variants" => {
+            "#{assembly.assemblies_parts.last.id}" => "#{shirt.variants.last.id}"
+          }
+        })
+
+        part_line_items = line_item.part_line_items
+
+        expect(part_line_items[0].line_item_id).to eq line_item.id
+        expect(part_line_items[0].variant_id).to eq keychain.master.id
+        expect(part_line_items[0].quantity).to eq 1
+        expect(part_line_items[1].line_item_id).to eq line_item.id
+        expect(part_line_items[1].variant_id).to eq shirt.variants.last.id
+        expect(part_line_items[1].quantity).to eq 1
       end
     end
   end

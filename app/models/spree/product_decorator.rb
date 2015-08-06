@@ -16,25 +16,6 @@ Spree::Product.class_eval do
 
   validate :assembly_cannot_be_part, :if => :assembly?
 
-  def add_part(variant, count = 1)
-    set_part_count(variant, count_of(variant) + count)
-  end
-
-  def remove_part(variant)
-    set_part_count(variant, 0)
-  end
-
-  def set_part_count(variant, count)
-    ap = assemblies_part(variant)
-    if count > 0
-      ap.count = count
-      ap.save
-    else
-      ap.destroy
-    end
-    reload
-  end
-
   def assembly?
     parts.present?
   end
