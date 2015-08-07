@@ -12,6 +12,11 @@ require 'database_cleaner'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara/poltergeist'
+
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app, timeout: 90)
+end
+
 Capybara.javascript_driver = :poltergeist
 
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each {|f| require f }
@@ -51,6 +56,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.include WaitForAjax, type: :feature
   config.include FactoryGirl::Syntax::Methods
   config.include Spree::TestingSupport::UrlHelpers
 end
