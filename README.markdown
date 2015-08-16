@@ -1,9 +1,11 @@
 # Product Assembly
 
-[![Build Status](https://secure.travis-ci.org/spree-contrib/spree-product-assembly.png)](https://travis-ci.org/spree-contrib/spree-product-assembly)
-[![Code Climate](https://codeclimate.com/github/spree-contrib/spree-product-assembly.png)](https://codeclimate.com/github/spree-contrib/spree-product-assembly)
+[![Build Status](https://travis-ci.org/spree-contrib/spree-product-assembly.svg?branch=master)](https://travis-ci.org/spree-contrib/spree-product-assembly)
+[![Code Climate](https://codeclimate.com/github/spree-contrib/spree-product-assembly/badges/gpa.svg)](https://codeclimate.com/github/spree-contrib/spree-product-assembly)
 
 Create a product which is composed of other products.
+
+---
 
 ## Installation
 
@@ -12,8 +14,7 @@ Add the following line to your `Gemfile`
 gem 'spree_product_assembly', github: 'spree-contrib/spree-product-assembly', branch: 'master'
 ```
 
-Run bundle install as well as the extension install command to copy and run migrations and
-append spree_product_assembly to your js manifest file
+Run bundle install as well as the extension install command to copy and run migrations and append spree_product_assembly to your JS manifest file.
 
     bundle install
     rails g spree_product_assembly:install
@@ -29,67 +30,42 @@ exceptions. No need to run this task if you're not upgrading from product assemb
 
     rake spree_product_assembly:upgrade
 
+---
+
 ## Use
 
-To build a bundle (assembly product) you'd need to first check the "Can be part"
-flag on each product you want to be part of the bundle. Then create a product
-and add parts to it. By doing that you're making that product an assembly.
+To build a bundle (assembly product) you'd need to first check the "Can be part" flag on each product you want to be part of the bundle. Then create a product and add parts to it. By doing that you're making that product an assembly.
 
 The store will treat assemblies a bit different than regular products on checkout.
 Spree will create and track inventory units for its parts rather than for the product itself.
-That means you essentially have a product composed of other products. From a
-customer perspective it's like they are paying a single amount for a collection
-of products.
+That means you essentially have a product composed of other products. From a customer perspective it's like they are paying a single amount for a collection of products.
 
 ## Using with spree_wombat
 
-If you use this with spree_wombat make sure that you add this extension after
-spree_wombat in your `Gemfile`
+If you use this with spree_wombat make sure that you add this extension after spree_wombat in your `Gemfile`
 
-This extension provides a specific serializer for shipments `assembly_shipment_serializer`, to use this in your Spree storefront make sure
-you configure spree_wombat like this:
+This extension provides a specific serializer for shipments `assembly_shipment_serializer`, to use this in your Spree storefront make sure you configure spree_wombat like this:
 
 ```ruby
 config.payload_builder = {
-  "Spree::Shipment" => {:serializer => "Spree::Wombat::AssemblyShipmentSerializer", :root => "shipments"}
+  'Spree::Shipment' => {
+    serializer: 'Spree::Wombat::AssemblyShipmentSerializer',
+    root: 'shipments'
+  }
 }
 ```
 
-Contributing
-------------
+---
 
-Spree is an open source project and we encourage contributions. Please see the [contributors guidelines][1] before contributing.
+## Contributing
 
-In the spirit of [free software][2], **everyone** is encouraged to help improve this project.
+See corresponding [guidelines][1].
 
-Here are some ways *you* can contribute:
+---
 
-* by using prerelease versions
-* by reporting [bugs][3]
-* by suggesting new features
-* by writing translations
-* by writing or editing documentation
-* by writing specifications
-* by writing code (*no patch is too small*: fix typos, add comments, clean up inconsistent whitespace)
-* by refactoring code
-* by resolving [issues][3]
-* by reviewing patches
-
-Starting point:
-
-* Fork the repo
-* Clone your repo
-* Run `bundle install`
-* Run `bundle exec rake test_app` to create the test application in `spec/test_app`
-* Make your changes
-* Ensure specs pass by running `bundle exec rspec spec`
-* Submit your pull request
-
-Copyright (c) 2007-2015 [Spree Commerce Inc.][4] and [contributors][5], released under the [New BSD License][6]
+Copyright (c) 2007-2015 [Spree Commerce Inc.][2] and [contributors][3], released under the [New BSD License][4]
 
 [1]: http://guides.spreecommerce.com/developer/contributing.html
-[2]: http://www.fsf.org/licensing/essays/free-sw.html
-[3]: https://github.com/spree/spree-product-assembly/issues
-[4]: https://github.com/spree
-[5]: https://github.com/spree/spree-product-assembly/graphs/contributors
-[6]: https://github.com/spree/spree-product-assembly/blob/master/LICENSE.md
+[2]: https://github.com/spree
+[3]: https://github.com/spree-contrib/spree-product-assembly/graphs/contributors
+[4]: https://github.com/spree-contrib/spree-product-assembly/blob/master/LICENSE.md
