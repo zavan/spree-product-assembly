@@ -1,62 +1,30 @@
 require 'simplecov'
 SimpleCov.start 'rails'
 
-ENV["RAILS_ENV"] = "test"
+ENV['RAILS_ENV'] = 'test'
 
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+begin
+  require File.expand_path('../dummy/config/environment', __FILE__)
+rescue LoadError
+  puts 'Could not load dummy application. Please ensure you have run `bundle exec rake test_app`'
+  exit
+end
 
 require 'rspec/rails'
 require 'ffaker'
-require 'database_cleaner'
-
-require 'capybara/rspec'
-require 'capybara/rails'
-require 'capybara/poltergeist'
-
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, timeout: 90)
-end
-
-Capybara.javascript_driver = :poltergeist
-
-Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each {|f| require f }
-
-require 'spree/testing_support/factories'
-require 'spree/testing_support/url_helpers'
-require 'spree/testing_support/authorization_helpers'
-require 'spree/testing_support/capybara_ext'
-
-# ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 RSpec.configure do |config|
+  config.fail_fast = false
+  config.filter_run focus: true
+  config.infer_spec_type_from_file_location!
   config.mock_with :rspec
+  config.raise_errors_for_deprecations!
+  config.run_all_when_everything_filtered = true
   config.use_transactional_fixtures = false
 
-  config.before :suite do
-    Capybara.match = :prefer_exact
-    DatabaseCleaner.clean_with :truncation
+  config.expect_with :rspec do |expectations|
+    expectations.syntax = :expect
   end
-
-  config.before(:each) do
-    Rails.cache.clear
-
-    if RSpec.current_example.metadata[:js]
-      DatabaseCleaner.strategy = :truncation
-    else
-      DatabaseCleaner.strategy = :transaction
-    end
-
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    # Ensure js requests finish processing before advancing to the next test
-    wait_for_ajax if RSpec.current_example.metadata[:js]
-
-    DatabaseCleaner.clean
-  end
-
-  config.include WaitForAjax, type: :feature
-  config.include FactoryGirl::Syntax::Methods
-  config.include Spree::TestingSupport::UrlHelpers
 end
+
+Dir[File.join(File.dirname(__FILE__), '/support/**/*.rb')].each { |file| require file }

@@ -1,5 +1,3 @@
-require 'factory_girl'
-
 FactoryGirl.define do
   factory :variant_in_stock, parent: :variant do
     transient do
