@@ -6,7 +6,6 @@ en:
     individual_sale: Individual sale
     no_variants: No variants
     parts: Parts
-    part_quantity_invalid: Part quantity must be a positive integer
     assembly_cannot_be_part: assembly can't be part
     product_bundles: Product Bundles
     parts_included: Parts included
