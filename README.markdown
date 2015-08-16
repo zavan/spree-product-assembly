@@ -85,7 +85,7 @@ Starting point:
 * Ensure specs pass by running `bundle exec rspec spec`
 * Submit your pull request
 
-Copyright (c) 2014 [Spree Commerce Inc.][4] and [contributors][5], released under the [New BSD License][6]
+Copyright (c) 2007-2015 [Spree Commerce Inc.][4] and [contributors][5], released under the [New BSD License][6]
 
 [1]: http://guides.spreecommerce.com/developer/contributing.html
 [2]: http://www.fsf.org/licensing/essays/free-sw.html
