@@ -1,5 +1,5 @@
 module Spree
-  describe Shipment do
+  describe Shipment, type: :model do
     context "order has one product assembly" do
       let(:order) { Order.create }
       let(:bundle) { create(:variant) }
@@ -26,8 +26,8 @@ module Spree
         let(:expected_variants) { order.variants - [bundle_variant] + bundle.parts }
 
         it "separates variant purchased individually from the bundle one" do
-          expect(shipments.count).to eql 1
-          shipments.first.manifest.map(&:variant).sort.should == expected_variants.sort
+          expect(shipments.count).to eq 1
+          expect(shipments.first.manifest.map(&:variant).sort).to eq expected_variants.sort
         end
       end
 
@@ -35,8 +35,8 @@ module Spree
         let(:expected_variants) { order.variants }
 
         it "groups units by line_item only" do
-          expect(shipments.count).to eql 1
-          shipments.first.line_item_manifest.map(&:variant).sort.should == expected_variants.sort
+          expect(shipments.count).to eq 1
+          expect(shipments.first.line_item_manifest.map(&:variant).sort).to eq expected_variants.sort
         end
       end
 
@@ -45,7 +45,7 @@ module Spree
         let(:shipment) { order.shipments.first }
 
         it "searches for line item if inventory unit doesn't have one" do
-          shipment.manifest.last.line_item.should_not be_blank
+          expect(shipment.manifest.last.line_item).not_to be_blank
         end
       end
     end

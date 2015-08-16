@@ -1,5 +1,5 @@
 module Spree
-  describe Variant do
+  describe Variant, type: :model do
     context "filter assemblies" do
       let(:mug) { create(:product) }
       let(:tshirt) { create(:product) }
@@ -18,7 +18,7 @@ module Spree
 
       context "variant no assembly" do
         it "returns both products" do
-          variant.assemblies_for([mug, tshirt]).should be_empty
+          expect(variant.assemblies_for([mug, tshirt])).to be_empty
         end
       end
     end

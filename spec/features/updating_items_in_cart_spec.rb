@@ -1,7 +1,7 @@
-describe "Updating items in the cart", type: :feature do
+RSpec.feature "Updating items in the cart", type: :feature do
   context "when updating a bundle's quantity" do
     context "when none of the bundle items are packs or have options" do
-      specify "the quantities are multiplied by the bundle's new quantity" do
+      scenario "the quantities are multiplied by the bundle's new quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
         keychain = create(:product_in_stock, name: "Keychain",
@@ -34,7 +34,7 @@ describe "Updating items in the cart", type: :feature do
     end
 
     context "when one of the variants is a pack" do
-      specify "the pack quantity is multiplied by the bundle's new quantity" do
+      scenario "the pack quantity is multiplied by the bundle's new quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
         keychain = create(:product_in_stock, name: "Keychain",
@@ -71,7 +71,7 @@ describe "Updating items in the cart", type: :feature do
     end
 
     context "when a bundle items has a variant (that is not user-selectable)" do
-      specify "the variant quantity is multiplied by the new bundle quantity" do
+      scenario "the variant quantity is multiplied by the new bundle quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
         keychain = create(:product_in_stock, name: "Keychain",
@@ -108,7 +108,7 @@ describe "Updating items in the cart", type: :feature do
     end
 
     context "when one of the bundle items has a user-selectable variant" do
-      specify "the variant quantity is multiplied by the new bundle quantity" do
+      scenario "the variant quantity is multiplied by the new bundle quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
         keychain = create(:product_in_stock, name: "Keychain",

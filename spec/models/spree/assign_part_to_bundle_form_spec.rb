@@ -1,5 +1,5 @@
 module Spree
-  describe AssignPartToBundleForm do
+  describe AssignPartToBundleForm, type: :model do
     describe "#submit" do
       context "when given a quantity < 1" do
         it "is invalid" do

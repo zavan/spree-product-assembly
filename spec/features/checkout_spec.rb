@@ -1,22 +1,22 @@
-describe "Checkout", type: :feature do
-  let!(:country) do
+RSpec.feature "Checkout", type: :feature do
+  given!(:country) do
     create(:country, name: "United States", states_required: true)
   end
-  let!(:state) { create(:state, name: "Ohio", country: country) }
-  let!(:shipping_method) { create(:shipping_method) }
-  let!(:stock_location) { create(:stock_location) }
-  let!(:payment_method) { create(:check_payment_method) }
-  let!(:zone) { create(:zone) }
+  given!(:state) { create(:state, name: "Ohio", country: country) }
+  given!(:shipping_method) { create(:shipping_method) }
+  given!(:stock_location) { create(:stock_location) }
+  given!(:payment_method) { create(:check_payment_method) }
+  given!(:zone) { create(:zone) }
 
-  let(:product) { create(:product, name: "RoR Mug") }
-  let(:variant) { create(:variant) }
+  given(:product) { create(:product, name: "RoR Mug") }
+  given(:variant) { create(:variant) }
 
   stub_authorization!
 
-  before { product.parts.push variant }
+  background { product.parts.push variant }
 
   shared_context "purchases product with part included" do
-    before do
+    background do
       add_product_to_cart
       click_button "Checkout"
 
@@ -24,15 +24,15 @@ describe "Checkout", type: :feature do
       fill_in_address
 
       click_button "Save and Continue"
-      expect(current_path).to eql(spree.checkout_state_path("delivery"))
-      page.should have_content(variant.product.name)
+      expect(current_path).to eq spree.checkout_state_path("delivery")
+      expect(page).to have_content(variant.product.name)
 
       click_button "Save and Continue"
-      expect(current_path).to eql(spree.checkout_state_path("payment"))
+      expect(current_path).to eq spree.checkout_state_path("payment")
 
       click_button "Save and Continue"
-      expect(current_path).to eql(spree.order_path(Spree::Order.last))
-      page.should have_content(variant.product.name)
+      expect(current_path).to eq spree.order_path(Spree::Order.last)
+      expect(page).to have_content(variant.product.name)
     end
   end
 
@@ -40,33 +40,33 @@ describe "Checkout", type: :feature do
     context "ordering only the product assembly" do
       include_context "purchases product with part included"
 
-      it "views parts bundled as well" do
+      scenario "views parts bundled as well" do
         visit spree.admin_orders_path
         click_on Spree::Order.last.number
 
-        page.should have_content(variant.product.name)
+        expect(page).to have_content(variant.product.name)
       end
     end
 
     context "ordering assembly and the part as individual sale" do
-      before do
+      background do
         visit spree.root_path
         click_link variant.product.name
         click_button "add-to-cart-button"
       end
       include_context "purchases product with part included"
 
-      it "views parts bundled and not" do
+      scenario "views parts bundled and not" do
         visit spree.admin_orders_path
         click_on Spree::Order.last.number
 
-        page.should have_content(variant.product.name)
+        expect(page).to have_content(variant.product.name)
       end
     end
   end
 
   context "when a part allows User to select any variant", js: true do
-    it "marks non-deferred parts as out of stock" do
+    scenario "marks non-deferred parts as out of stock" do
       rock = create(:product_in_stock, name: "Rock",
                                        can_be_part: true)
       stick = create(:product, name: "Stick",
@@ -90,7 +90,7 @@ describe "Checkout", type: :feature do
       end
     end
 
-    it "marks non-deferred parts as backorderable" do
+    scenario "marks non-deferred parts as backorderable" do
       rock = create(:product_in_stock, name: "Rock",
                                        can_be_part: true)
       stick = create(:product, name: "Stick",
@@ -115,7 +115,7 @@ describe "Checkout", type: :feature do
       end
     end
 
-    it "does not allow selection of variants that are out of stock" do
+    scenario "does not allow selection of variants that are out of stock" do
       red_option = create(:option_value, presentation: "Red")
       blue_option = create(:option_value, presentation: "Blue")
       green_option = create(:option_value, presentation: "Green")
@@ -171,7 +171,7 @@ describe "Checkout", type: :feature do
       end
     end
 
-    it "shows the part the User selected at all stages of checkout" do
+    scenario "shows the part the User selected at all stages of checkout" do
       red_option = create(:option_value, presentation: "Red")
       blue_option = create(:option_value, presentation: "Blue")
 
@@ -214,15 +214,15 @@ describe "Checkout", type: :feature do
       fill_in_address
 
       click_button "Save and Continue"
-      expect(current_path).to eql(spree.checkout_state_path("delivery"))
+      expect(current_path).to eq spree.checkout_state_path("delivery")
       expect(page).to have_content(shirt.name)
       expect(page).to have_content("Color: Blue")
 
       click_button "Save and Continue"
-      expect(current_path).to eql(spree.checkout_state_path("payment"))
+      expect(current_path).to eq spree.checkout_state_path("payment")
 
       click_button "Save and Continue"
-      expect(current_path).to eql(spree.order_path(Spree::Order.last))
+      expect(current_path).to eq spree.order_path(Spree::Order.last)
       expect(page).to have_content(shirt.name)
       expect(page).to have_content("Color: Blue")
     end

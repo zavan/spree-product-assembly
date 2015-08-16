@@ -1,6 +1,6 @@
 module Spree
   module Stock
-    describe InventoryUnitBuilder, :type => :model do
+    describe InventoryUnitBuilder, type: :model do
       subject { InventoryUnitBuilder.new(order) }
 
       context "order shares variant as individual and within bundle" do

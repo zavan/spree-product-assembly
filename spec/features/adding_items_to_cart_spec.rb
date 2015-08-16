@@ -1,7 +1,7 @@
-describe "Adding items to the cart", type: :feature do
+RSpec.feature "Adding items to the cart", type: :feature do
   context "when adding a bundle to the cart" do
     context "when none of the bundle items are packs or have options" do
-      specify "the cart lists the contents of the bundle" do
+      scenario "the cart lists the contents of the bundle" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
         keychain = create(:product_in_stock, name: "Keychain",
@@ -30,7 +30,7 @@ describe "Adding items to the cart", type: :feature do
     end
 
     context "when one of the variants is a pack" do
-      specify "the cart displays the same quantity for part line items" do
+      scenario "the cart displays the same quantity for part line items" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
         keychain = create(:product_in_stock, name: "Keychain",
@@ -59,7 +59,7 @@ describe "Adding items to the cart", type: :feature do
       end
 
       context "when ordering more than one of the bundle" do
-        specify "the part quantity is multiplied by the bundle quantity" do
+        scenario "the part quantity is multiplied by the bundle quantity" do
           bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
           keychain = create(:product_in_stock, name: "Keychain",
@@ -89,7 +89,7 @@ describe "Adding items to the cart", type: :feature do
     end
 
     context "when a bundle items has a variant (that is not user-selectable)" do
-      specify "the cart includes the variant when listing items bundle items" do
+      scenario "the cart includes the variant when listing items bundle items" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
         keychain = create(:product_in_stock, name: "Keychain",
@@ -119,7 +119,7 @@ describe "Adding items to the cart", type: :feature do
     end
 
     context "when one of the bundle items has a user-selectable variant" do
-      specify "the cart includes the variant when listing bundle items" do
+      scenario "the cart includes the variant when listing bundle items" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
         keychain = create(:product_in_stock, name: "Keychain",

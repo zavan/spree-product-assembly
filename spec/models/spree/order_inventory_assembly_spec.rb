@@ -1,5 +1,5 @@
 module Spree
-  describe OrderInventoryAssembly do
+  describe OrderInventoryAssembly, type: :model do
     describe "#verify" do
       context "when line item involves variants that are not user-selectable" do
         context "when a shipment is provided" do

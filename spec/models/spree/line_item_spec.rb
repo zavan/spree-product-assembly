@@ -1,5 +1,5 @@
 module Spree
-  describe LineItem do
+  describe LineItem, type: :model do
     let!(:order) { create(:order_with_line_items) }
     let(:line_item) { order.line_items.first }
     let(:product) { line_item.product }
@@ -52,10 +52,10 @@ module Spree
       end
 
       it "verifies inventory units via OrderInventoryAssembly" do
-        OrderInventoryAssembly.should_receive(:new).
+        expect(OrderInventoryAssembly).to receive(:new).
           with(line_item).
           and_return(inventory)
-        inventory.should_receive(:verify).with(line_item.target_shipment)
+        expect(inventory).to receive(:verify).with(line_item.target_shipment)
         line_item.quantity = 2
         line_item.save
       end
@@ -63,10 +63,10 @@ module Spree
 
     context "updates regular line item" do
       it "verifies inventory units via OrderInventory" do
-        OrderInventory.should_receive(:new).
+        expect(OrderInventory).to receive(:new).
           with(line_item.order, line_item).
           and_return(inventory)
-        inventory.should_receive(:verify).with(line_item.target_shipment)
+        expect(inventory).to receive(:verify).with(line_item.target_shipment)
         line_item.quantity = 2
         line_item.save
       end

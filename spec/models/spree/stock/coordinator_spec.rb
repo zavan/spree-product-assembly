@@ -1,6 +1,6 @@
 module Spree
   module Stock
-    describe Coordinator do
+    describe Coordinator, type: :model do
       subject { Coordinator.new(order) }
 
       context "order shares variant as individual and within bundle" do
@@ -16,7 +16,7 @@ module Spree
           it "calculates items quantity properly" do
             expected_units_on_package = order.line_items.to_a.sum(&:quantity) - bundle_item_quantity + (bundle.parts.count * bundle_item_quantity)
 
-            expect(subject.packages.sum(&:quantity)).to eql expected_units_on_package
+            expect(subject.packages.sum(&:quantity)).to eq expected_units_on_package
           end
         end
       end
@@ -34,9 +34,9 @@ module Spree
 
         before { bundle.parts << parts }
 
-        it "haha" do
+        specify do
           expected_units_on_package = order.line_items.to_a.sum(&:quantity) - bundle_item_quantity + (bundle.parts.count * bundle_item_quantity)
-          expect(subject.packages.sum(&:quantity)).to eql expected_units_on_package
+          expect(subject.packages.sum(&:quantity)).to eq expected_units_on_package
         end
       end
     end
