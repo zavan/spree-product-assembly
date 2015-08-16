@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Orders", type: :feature, js: true do
   stub_authorization!
 

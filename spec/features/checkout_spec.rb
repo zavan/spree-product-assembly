@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Checkout", type: :feature do
   let!(:country) do
     create(:country, name: "United States", states_required: true)

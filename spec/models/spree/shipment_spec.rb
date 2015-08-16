@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Spree
   describe Shipment do
     context "order has one product assembly" do

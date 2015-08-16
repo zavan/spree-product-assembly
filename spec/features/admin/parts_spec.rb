@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Managing parts for a product bundle", type: :feature, js: true do
   stub_authorization!
 

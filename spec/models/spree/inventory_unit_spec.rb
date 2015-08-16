@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Spree
   describe InventoryUnit do
     let!(:order) { create(:order_with_line_items) }
@@ -8,7 +6,7 @@ module Spree
 
     subject { InventoryUnit.create(line_item: line_item, variant: line_item.variant, order: order) }
 
-    context 'if the unit is not part of an assembly' do      
+    context 'if the unit is not part of an assembly' do
       it 'it will return the percentage of a line item' do
         expect(subject.percentage_of_line_item).to eql(BigDecimal.new(1))
       end

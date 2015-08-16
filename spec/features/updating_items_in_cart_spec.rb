@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe "Updating items in the cart", type: :feature do
   context "when updating a bundle's quantity" do
     context "when none of the bundle items are packs or have options" do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module Spree
   describe AssignPartToBundleForm do
     describe "#submit" do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Spree
   describe AssembliesPart do
     let(:product) { create(:product) }

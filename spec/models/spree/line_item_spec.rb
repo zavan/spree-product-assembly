@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Spree
   describe LineItem do
     let!(:order) { create(:order_with_line_items) }

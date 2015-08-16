@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Spree
   module Stock
     describe AvailabilityValidator, :type => :model do

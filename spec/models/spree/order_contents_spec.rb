@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Spree::OrderContents do
   describe "#add_to_line_item" do
     context "given a variant which is an assembly" do

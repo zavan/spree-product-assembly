@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Spree
   describe OrderInventory do
     let(:order) { Order.create }
