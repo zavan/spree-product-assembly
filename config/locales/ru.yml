@@ -10,3 +10,5 @@ ru:
     product_bundles: Продукт cвязки
     parts_included: 'Детали, входящие'
     part_of_bundle: 'Часть пучка %{sku}'
+    selected_quantity_not_available:
+    user_selectable:
