@@ -125,11 +125,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
         keychain = create(:product_in_stock, name: "Keychain",
                                              sku: "KEYCHAIN",
                                              can_be_part: true)
-        shirt, _shirts_by_size = create_bundle_product_with_options(
-          name: "Shirt",
-          sku: "SHIRT",
-          option_type: "Size",
-          option_values: ["Small", "Medium"]
+
+        shirt = bundled_product_from_options(
+          name: "Shirt", option_type: "Size", option_values: ["Small", "Medium"]
         )
 
         add_part_to_bundle(bundle, keychain.master, count: 1)
@@ -155,6 +153,117 @@ RSpec.feature "Adding items to the cart", type: :feature do
         end
       end
     end
+
+    context "when both of the bundle items have a user-selectable variant", js: true do
+      let(:bundle) { create(:product_in_stock, name: "Bundle", sku: "BUNDLE") }
+      let(:keychain) do
+        create(:product_in_stock, name: "Keychain",
+                                  sku: "KEYCHAIN",
+                                  can_be_part: true)
+      end
+
+      let(:shirt) do
+        bundled_product_from_options(
+          name: "Shirt", option_type: "Size", option_values: ["Large", "XL"]
+        )
+      end
+      let(:hat) do
+        bundled_product_from_options(
+          name: "Hat", option_type: "Color", option_values: ["Red", "Blue"]
+        )
+      end
+
+      before do
+        add_part_to_bundle(
+          bundle,
+          keychain.master,
+          count: 1
+        )
+
+        add_part_to_bundle(
+          bundle,
+          shirt.master,
+          variant_selection_deferred: true
+        )
+
+        add_part_to_bundle(
+          bundle,
+          hat.master,
+          variant_selection_deferred: true
+        )
+      end
+
+      context "and the user selects differing variants from the existing line item" do
+        specify "the cart contains incremented variants when listing bundle items" do
+          add_item_to_cart(size: "Large", color: "Red")
+          add_item_to_cart(size: "XL", color: "Blue")
+
+          within all("#cart-detail .line-item")[0] do
+            expect(page).to have_content(bundle.name)
+            expect(page).to have_css("input[value='1']")
+            expect(page).to(
+              have_content("(1) Keychain (KEYCHAIN)")
+            )
+            expect(page).to(
+              have_content("(1) Shirt (Size: Large) (SHIRT-LARGE)")
+            )
+            expect(page).to(
+              have_content("(1) Hat (Color: Red) (HAT-RED)")
+            )
+          end
+
+          within all("#cart-detail .line-item")[1] do
+            expect(page).to have_content(bundle.name)
+            expect(page).to have_css("input[value='1']")
+            expect(page).to(
+              have_content("(1) Keychain (KEYCHAIN)")
+            )
+            expect(page).to(
+              have_content("(1) Shirt (Size: XL) (SHIRT-XL)")
+            )
+            expect(page).to(
+              have_content("(1) Hat (Color: Blue) (HAT-BLUE)")
+            )
+          end
+        end
+      end
+
+      context "and the user selects the same variants as the existing line item" do
+        specify "the cart contains incremented variants when listing bundle items" do
+          2.times { add_item_to_cart(size: "Large", color: "Red") }
+
+          within "#cart-detail .line-item" do
+            expect(page).to have_content(bundle.name)
+            expect(page).to have_css("input[value='2']")
+            expect(page).to(
+              have_content("(2) Keychain (KEYCHAIN)")
+            )
+            expect(page).to(
+              have_content("(2) Shirt (Size: Large) (SHIRT-LARGE)")
+            )
+            expect(page).to(
+              have_content("(2) Hat (Color: Red) (HAT-RED)")
+            )
+          end
+        end
+      end
+    end
+  end
+
+  def add_item_to_cart(args)
+    visit spree.product_path(bundle)
+
+    select "Size: #{args[:size]}", from: "options_selected_variants_2"
+    select "Color: #{args[:color]}", from: "options_selected_variants_3"
+    click_button "add-to-cart-button"
+  end
+
+  def bundled_product_from_options(args)
+    args[:sku] ||= args[:name].parameterize.upcase
+
+    product, _product_variants = create_bundle_product_with_options(args)
+
+    product
   end
 
   def create_bundle_product_with_options(args)
