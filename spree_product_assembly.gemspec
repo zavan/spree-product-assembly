@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_product_assembly'
-  s.version     = '2.4.0.beta'
+  s.version     = '3.0.0'
   s.summary     = 'Adds oportunity to make bundle of products to your Spree store'
   s.description = s.summary
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 2.1.0'
 
   s.author            = 'Roman Smirnov'
   s.email             = 'POMAHC@gmail.com'
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_backend', '~> 2.4.0'
+  s.add_dependency 'spree_backend', '~> 3.0'
 
   s.add_development_dependency 'active_model_serializers', '0.9.0.alpha1'
   s.add_development_dependency 'rspec-rails', '~> 3.3.0'
@@ -29,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'database_cleaner', '~> 1.4'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'pg'
+  s.add_development_dependency 'launchy'
 end

@@ -17,6 +17,8 @@ RSpec.feature "Checkout", type: :feature do
 
   shared_context "purchases product with part included" do
     background do
+      create :store
+
       add_product_to_cart
       click_button "Checkout"
 
@@ -172,6 +174,7 @@ RSpec.feature "Checkout", type: :feature do
     end
 
     scenario "shows the part the User selected at all stages of checkout" do
+      create :store
       red_option = create(:option_value, presentation: "Red")
       blue_option = create(:option_value, presentation: "Blue")
 
