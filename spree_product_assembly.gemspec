@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sass-rails', '~> 4.0.0'
   s.add_development_dependency 'capybara', '~> 2.4'
   s.add_development_dependency 'poltergeist', '~> 1.6'
-  s.add_development_dependency 'database_cleaner', '~> 1.3'
+  s.add_development_dependency 'database_cleaner', '~> 1.4'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'pg'
 end
