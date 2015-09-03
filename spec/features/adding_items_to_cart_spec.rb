@@ -194,7 +194,7 @@ RSpec.feature "Adding items to the cart", type: :feature do
       end
 
       context "and the user selects differing variants from the existing line item" do
-        specify "the cart contains incremented variants when listing bundle items" do
+        it "contains 2 line items of the same SKU with differing variants " do
           add_item_to_cart(size: "Large", color: "Red")
           add_item_to_cart(size: "XL", color: "Blue")
 
@@ -229,7 +229,7 @@ RSpec.feature "Adding items to the cart", type: :feature do
       end
 
       context "and the user selects the same variants as the existing line item" do
-        specify "the cart contains incremented variants when listing bundle items" do
+        it "contains 1 line item with incremented variants and quantities" do
           2.times { add_item_to_cart(size: "Large", color: "Red") }
 
           within "#cart-detail .line-item" do
