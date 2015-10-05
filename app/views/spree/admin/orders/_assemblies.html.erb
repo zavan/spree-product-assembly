@@ -20,7 +20,7 @@
             <td class="item-image"><%= mini_image(item.variant) %></td>
             <td class="item-name">
               <%= item.product.name %> - <%= item.variant.sku %> <br />
-              <%= "(" + variant_options(item.variant) + ")" unless item.variant.option_values.empty? %>
+              <%= "(" + variant_options(item.variant) + ")" if item.variant.option_values.any? %>
             </td>
             <td class="item-price align-center">
               <%= item.single_money.to_html %>
@@ -30,7 +30,7 @@
             </td>
 
             <td class="line-item-qty-edit is-hidden">
-              <%= number_field_tag :quantity, item.quantity, :min => 0, class: "form-control line_item_quantity", :size => 5 %>
+              <%= number_field_tag :quantity, item.quantity, :min => 0, :class => "form-control line_item_quantity", :size => 5 %>
             </td>
 
             <td class="item-total align-center">
