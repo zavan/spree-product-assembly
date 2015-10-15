@@ -1,5 +1,5 @@
 <h4><%= Spree.t(:available_parts) %></h4>
-<table class="index">
+<table class="table">
   <thead>
     <tr>
       <th><%= Spree.t(:name) %></th>
@@ -29,7 +29,7 @@
         <td><%= text_field_tag "part[count]", 1 %></td>
         <td class="actions">
           <%= image_tag "spinner.gif", :style => "display:none", :class => "spinner" %>
-          <%= link_to(icon('add') + ' ' + Spree.t(:select),
+          <%= link_to_with_icon('add', Spree.t(:select),
                       admin_product_parts_path(product),
                       :data => { 'target' => dom_id(part), 'master-variant-id' => part.master.id},
                       :class => "add_product_part_link") %>
