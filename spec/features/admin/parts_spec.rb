@@ -139,6 +139,8 @@ RSpec.feature "Managing parts for a product bundle", type: :feature, js: true do
       click_on "Parts"
       fill_in "searchtext", with: mug.name
       click_on "Search"
+
+      wait_for_ajax
       within("#search_hits") { click_on "Select" }
     end
 
@@ -147,6 +149,7 @@ RSpec.feature "Managing parts for a product bundle", type: :feature, js: true do
         fill_in "count", with: "5"
         find(".set_count_admin_product_part_link").click
 
+        wait_for_ajax
         expect(find_field('count').value).to eq "5"
       end
     end
