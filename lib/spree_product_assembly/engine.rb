@@ -16,7 +16,9 @@ module SpreeProductAssembly
       end
     end
 
-    config.assets.precompile += %w( spinner.gif )
+    initializer 'spree.assets.precompile', group: :all do |app|
+      app.config.assets.precompile += %w( spinner.gif )
+    end
 
     config.to_prepare &method(:activate).to_proc
   end
