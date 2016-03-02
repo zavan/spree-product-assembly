@@ -78,9 +78,9 @@ RSpec.feature "Checkout", type: :feature do
 
       bundle = create(:product, name: "Bundle")
 
-      create(:assemblies_part, assembly_id: bundle.id,
+      create(:assemblies_part, assembly_id: bundle.master.id,
                                part_id: rock.master.id)
-      create(:assemblies_part, assembly_id: bundle.id,
+      create(:assemblies_part, assembly_id: bundle.master.id,
                                part_id: stick.master.id)
       bundle.reload
 
@@ -102,9 +102,9 @@ RSpec.feature "Checkout", type: :feature do
 
       bundle = create(:product, name: "Bundle")
 
-      create(:assemblies_part, assembly_id: bundle.id,
+      create(:assemblies_part, assembly_id: bundle.master.id,
                                part_id: rock.master.id)
-      create(:assemblies_part, assembly_id: bundle.id,
+      create(:assemblies_part, assembly_id: bundle.master.id,
                                part_id: stick.master.id)
 
       bundle.reload
@@ -154,7 +154,7 @@ RSpec.feature "Checkout", type: :feature do
 
       bundle = create(:product, name: "Bundle")
 
-      create(:assemblies_part, assembly_id: bundle.id,
+      create(:assemblies_part, assembly_id: bundle.master.id,
                                part_id: shirt.master.id,
                                variant_selection_deferred: true)
       bundle.reload
@@ -162,7 +162,7 @@ RSpec.feature "Checkout", type: :feature do
       visit spree.root_path
       click_link bundle.name
 
-      first_selectable = bundle.master.parts_variants.first.id
+      first_selectable = bundle.master.parts_variants.first.part_id
 
       within("#options_selected_variants_#{first_selectable}") do
         expect(page).to have_css("option[value='#{red.id}']")
@@ -200,7 +200,7 @@ RSpec.feature "Checkout", type: :feature do
       bundle = create(:product, name: "Bundle")
 
       create(:assemblies_part,
-             assembly_id: bundle.id,
+             assembly_id: bundle.master.id,
              part_id: shirt.master.id,
              variant_selection_deferred: true)
       bundle.reload

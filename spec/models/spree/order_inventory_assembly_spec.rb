@@ -297,7 +297,7 @@ module Spree
         if part[:variant_selection_deferred]
           selected_variants = {
             "selected_variants" => {
-              "#{bundle.assemblies_parts.last.id}" => "#{variants.last.id}"
+              "#{bundle.master.parts_variants.last.part_id}" => "#{variants.last.id}"
             }
           }
         end

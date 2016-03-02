@@ -123,7 +123,7 @@ RSpec.feature "Managing parts for a product bundle", type: :feature, js: true do
     fill_in "searchtext", with: mug.name
     click_on "Search"
 
-    within("#search_hits") { click_on "Select" }
+    within('#search_hits .actions') { click_on "Select" }
     expect(page).to have_content(mug.sku)
 
     within("#product_parts") do
