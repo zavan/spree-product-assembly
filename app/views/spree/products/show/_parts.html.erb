@@ -1,8 +1,8 @@
 <% if @product.assemblies_parts.any? %>
-<div class="columns">
+<div class="columns col-md-12">
   <h6><%= Spree.t(:parts_included) %></h6>
 
-  <ul id="products" class="inline product-listing" data-hook>
+  <ul id="products" class="inline product-listing list-unstyled" data-hook>
     <% @product.assemblies_parts.each do |part| %>
       <%- variant = part.part %>
 
