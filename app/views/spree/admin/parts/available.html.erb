@@ -20,7 +20,7 @@
             <%- opts = part.variants.map {|v| [variant_options(v), v.id] } %>
             <%= select_tag "part[id]",
               options_for_select(opts),
-              include_blank: Spree.t(:user_selectable), class: 'part_selector'
+              include_blank: Spree.t(:user_selectable), class: 'part_selector select2'
             %>
           <% else %>
             <%= hidden_field_tag "part[id]", part.master.id %>
@@ -30,7 +30,7 @@
         <% unless product.has_variants? %>
           <td><%= hidden_field_tag "part[assembly_id]", product.master.id, class: 'parts-assembly' %>Master</td>
         <% else %>
-          <td><%= select_tag "part[assembly_id]", options_from_collection_for_select(product.variants, "id", "options_text") %></td>
+          <td><%= select_tag "part[assembly_id]", options_from_collection_for_select(product.variants, "id", "options_text"), class: 'select2' %></td>
         <% end %>
         <td><%= text_field_tag "part[count]", 1 %></td>
         <td class="actions">
