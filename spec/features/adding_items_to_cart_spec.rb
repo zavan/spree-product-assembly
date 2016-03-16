@@ -11,8 +11,8 @@ RSpec.feature "Adding items to the cart", type: :feature do
                                           sku: "SHIRT",
                                           can_be_part: true)
 
-        add_part_to_bundle(bundle, keychain.master)
-        add_part_to_bundle(bundle, shirt.master)
+        add_part_to_bundle(bundle.master, keychain.master)
+        add_part_to_bundle(bundle.master, shirt.master)
 
         visit spree.product_path(bundle)
 
@@ -43,8 +43,8 @@ RSpec.feature "Adding items to the cart", type: :feature do
           option_values: ["Small"]
         )
 
-        add_part_to_bundle(bundle, keychain.master, count: 2)
-        add_part_to_bundle(bundle, shirts_by_size["small"])
+        add_part_to_bundle(bundle.master, keychain.master, count: 2)
+        add_part_to_bundle(bundle.master, shirts_by_size["small"])
 
         visit spree.product_path(bundle)
 
@@ -69,8 +69,8 @@ RSpec.feature "Adding items to the cart", type: :feature do
                                             sku: "SHIRT",
                                             can_be_part: true)
 
-          add_part_to_bundle(bundle, keychain.master, count: 2)
-          add_part_to_bundle(bundle, shirt.master)
+          add_part_to_bundle(bundle.master, keychain.master, count: 2)
+          add_part_to_bundle(bundle.master, shirt.master)
 
           visit spree.product_path(bundle)
 
@@ -102,8 +102,8 @@ RSpec.feature "Adding items to the cart", type: :feature do
           option_values: ["Small"]
         )
 
-        add_part_to_bundle(bundle, keychain.master)
-        add_part_to_bundle(bundle, shirts_by_size["small"])
+        add_part_to_bundle(bundle.master, keychain.master)
+        add_part_to_bundle(bundle.master, shirts_by_size["small"])
 
         visit spree.product_path(bundle)
 
@@ -118,7 +118,7 @@ RSpec.feature "Adding items to the cart", type: :feature do
       end
     end
 
-    context "when one of the bundle items has a user-selectable variant" do
+    context "when one of the bundle items has a user-selectable variant", js: true do
       scenario "the cart includes the variant when listing bundle items" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
@@ -130,16 +130,17 @@ RSpec.feature "Adding items to the cart", type: :feature do
           name: "Shirt", option_type: "Size", option_values: ["Small", "Medium"]
         )
 
-        add_part_to_bundle(bundle, keychain.master, count: 1)
+        add_part_to_bundle(bundle.master, keychain.master, count: 1)
         add_part_to_bundle(
-          bundle,
+          bundle.master,
           shirt.master,
+          count: 1,
           variant_selection_deferred: true
         )
 
         visit spree.product_path(bundle)
 
-        select "Size: Medium", from: "Variant"
+        select 'Size: Medium', from: 'Variant'
 
         click_button "add-to-cart-button"
 
@@ -175,19 +176,19 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
       before do
         add_part_to_bundle(
-          bundle,
+          bundle.master,
           keychain.master,
           count: 1
         )
 
         add_part_to_bundle(
-          bundle,
+          bundle.master,
           shirt.master,
           variant_selection_deferred: true
         )
 
         add_part_to_bundle(
-          bundle,
+          bundle.master,
           hat.master,
           variant_selection_deferred: true
         )
@@ -253,8 +254,8 @@ RSpec.feature "Adding items to the cart", type: :feature do
   def add_item_to_cart(args)
     visit spree.product_path(bundle)
 
-    select "Size: #{args[:size]}", from: "options_selected_variants_2"
-    select "Color: #{args[:color]}", from: "options_selected_variants_3"
+    select "Size: #{args[:size]}", from: "options_selected_variants_3"
+    select "Color: #{args[:color]}", from: "options_selected_variants_6"
     click_button "add-to-cart-button"
   end
 
@@ -298,13 +299,13 @@ RSpec.feature "Adding items to the cart", type: :feature do
     end
   end
 
-  def add_part_to_bundle(bundle, variant, options = {})
+  def add_part_to_bundle(bundle_master, variant, options = {})
     attributes = options.reverse_merge(
-      assembly_id: bundle.id,
+      assembly_id: bundle_master.id,
       part_id: variant.id,
     )
     create(:assemblies_part, attributes).tap do |_part|
-      bundle.reload
+      bundle_master.product.reload
     end
   end
 end

@@ -11,8 +11,8 @@ RSpec.feature "Updating items in the cart", type: :feature do
                                           sku: "SHIRT",
                                           can_be_part: true)
 
-        add_part_to_bundle(bundle, keychain.master)
-        add_part_to_bundle(bundle, shirt.master)
+        add_part_to_bundle(bundle.master, keychain.master)
+        add_part_to_bundle(bundle.master, shirt.master)
 
         visit spree.product_path(bundle)
 
@@ -48,8 +48,8 @@ RSpec.feature "Updating items in the cart", type: :feature do
           option_values: ["Small"]
         )
 
-        add_part_to_bundle(bundle, keychain.master, count: 2)
-        add_part_to_bundle(bundle, shirts_by_size["small"])
+        add_part_to_bundle(bundle.master, keychain.master, count: 2)
+        add_part_to_bundle(bundle.master, shirts_by_size["small"])
 
         visit spree.product_path(bundle)
 
@@ -85,8 +85,8 @@ RSpec.feature "Updating items in the cart", type: :feature do
           option_values: ["Small"]
         )
 
-        add_part_to_bundle(bundle, keychain.master)
-        add_part_to_bundle(bundle, shirts_by_size["small"])
+        add_part_to_bundle(bundle.master, keychain.master)
+        add_part_to_bundle(bundle.master, shirts_by_size["small"])
 
         visit spree.product_path(bundle)
 
@@ -107,7 +107,7 @@ RSpec.feature "Updating items in the cart", type: :feature do
       end
     end
 
-    context "when one of the bundle items has a user-selectable variant" do
+    context "when one of the bundle items has a user-selectable variant", js: true do
       scenario "the variant quantity is multiplied by the new bundle quantity" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")
 
@@ -122,9 +122,9 @@ RSpec.feature "Updating items in the cart", type: :feature do
           option_values: ["Small", "Medium"]
         )
 
-        add_part_to_bundle(bundle, keychain.master, count: 1)
+        add_part_to_bundle(bundle.master, keychain.master, count: 1)
         add_part_to_bundle(
-          bundle,
+          bundle.master,
           shirt.master,
           variant_selection_deferred: true
         )
@@ -185,13 +185,13 @@ RSpec.feature "Updating items in the cart", type: :feature do
     end
   end
 
-  def add_part_to_bundle(bundle, variant, options = {})
+  def add_part_to_bundle(bundle_master, variant, options = {})
     attributes = options.reverse_merge(
-      assembly_id: bundle.id,
+      assembly_id: bundle_master.id,
       part_id: variant.id,
     )
     create(:assemblies_part, attributes).tap do |_part|
-      bundle.reload
+      bundle_master.reload
     end
   end
 end

@@ -6,7 +6,7 @@ describe Spree::OrderContents, type: :model do
         assembly = create(:product)
         pieces = create_list(:product, 2)
         pieces.each do |piece|
-          create(:assemblies_part, assembly: assembly, part: piece.master)
+          create(:assemblies_part, assembly: assembly.master, part: piece.master)
         end
 
         contents = described_class.new(order)
@@ -49,10 +49,10 @@ describe Spree::OrderContents, type: :model do
         create(:variant_in_stock, product: shirt, option_values: [red_option])
         create(:variant_in_stock, product: shirt, option_values: [blue_option])
 
-        create(:assemblies_part,
+        assembly_part_keychain = create(:assemblies_part,
                assembly_id: assembly.id,
                part_id: keychain.master.id)
-        create(:assemblies_part,
+        assembly_part_shirt = create(:assemblies_part,
                assembly_id: assembly.id,
                part_id: shirt.master.id,
                variant_selection_deferred: true)
@@ -62,7 +62,8 @@ describe Spree::OrderContents, type: :model do
 
         line_item = contents.add_to_line_item_with_parts(assembly.master, 1, {
           "selected_variants" => {
-            "#{assembly.assemblies_parts.last.id}" => "#{shirt.variants.last.id}"
+            "#{assembly_part_keychain.part_id}" => "#{keychain.master.id}",
+            "#{assembly_part_shirt.part_id}" => "#{shirt.variants.last.id}"
           }
         })
 
