@@ -18,7 +18,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'spree_backend', '~> 3.2.0.alpha'
 
   s.add_development_dependency 'active_model_serializers', '~> 0.8.3'
-  s.add_development_dependency 'capybara', '~> 2.4'
+  s.add_development_dependency 'capybara', '~> 2.5'
+  s.add_development_dependency 'capybara-screenshot', '~> 1.0.11'
   s.add_development_dependency 'coffee-rails', '~> 4.0.0'
   s.add_development_dependency 'database_cleaner', '~> 1.4'
   s.add_development_dependency 'factory_girl', '~> 4.4'
