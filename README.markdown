@@ -9,26 +9,27 @@ Create a product which is composed of other products.
 
 ## Installation
 
-Add the following line to your `Gemfile`
-```ruby
-gem 'spree_product_assembly', github: 'spree-contrib/spree-product-assembly', branch: 'master'
-```
+1. Add this extension to your Gemfile with this line:
+  ```ruby
+  gem 'spree_product_assembly', github: 'spree-contrib/spree-product-assembly', branch: 'X-X-stable'
+  ```
 
-Run bundle install as well as the extension install command to copy and run migrations and append spree_product_assembly to your JS manifest file.
+  The `branch` option is important: it must match the version of Spree you're using.
+  For example, use `3-0-stable` if you're using Spree `3-0-stable` or any `3.0.x` version.
 
-    bundle install
-    rails g spree_product_assembly:install
+2. Install the gem using Bundler:
+  ```ruby
+  bundle install
+  ```
 
-_master branch is compatible with spree edge and rails 4 only. Please use
-2-0-stable for Spree 2.0.x or 1-3-stable branch for Spree 1.3.x compatibility_
+3. Copy & run migrations
+  ```ruby
+  bundle exec rails g spree_product_assembly:install
+  ```
 
-_In case you're upgrading from 1-3-stable of this extension you might want to run a
-rake task which assigns a line item to your previous inventory units from bundle
-products. That is so you have a better view on the current backend UI and avoid
-exceptions. No need to run this task if you're not upgrading from product assembly
-1-3-stable_
+4. Restart your server
 
-    rake spree_product_assembly:upgrade
+  If your server was running, restart it so that it can find the assets properly.
 
 ---
 
