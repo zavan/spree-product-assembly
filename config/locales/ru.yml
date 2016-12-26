@@ -2,6 +2,9 @@
 ru:
   spree:
     admin:
+      parts:
+        index:
+          search: Поиск
       products:
         form:
           can_be_part: Может быть частью набора
