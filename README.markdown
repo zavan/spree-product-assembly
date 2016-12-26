@@ -1,7 +1,6 @@
 # Product Assembly
 
-[![Build Status](https://travis-ci.org/r72cccp/spree-product-assembly.svg?branch=master)](https://travis-ci.org/r72cccp/spree-product-assembly)
-[![Code Climate](https://codeclimate.com/github/r72cccp/spree-product-assembly/badges/gpa.svg)](https://codeclimate.com/github/spree-contrib/spree-product-assembly)
+[![Build Status](https://travis-ci.org/r72cccp/spree-product-assembly.svg?branch=3-0-stable)](https://travis-ci.org/r72cccp/spree-product-assembly)
 
 Create a product which is composed of other products.
 
@@ -9,6 +8,7 @@ Create a product which is composed of other products.
 
 ## About Fork
 
+All changes only in 3-0-stable branch and for spree 3.0.x
 After installing this gem to rails 4.2.6 and spree 3.0 i'd see - it work not so as it is described. Try to repair functionality.
 
 ---
@@ -17,7 +17,7 @@ After installing this gem to rails 4.2.6 and spree 3.0 i'd see - it work not so 
 
 Add the following line to your `Gemfile`
 ```ruby
-gem 'spree_product_assembly', github: 'r72cccp/spree-product-assembly', branch: 'master'
+gem 'spree_product_assembly', github: 'r72cccp/spree-product-assembly', branch: '3-0-stable'
 ```
 
 Run bundle install as well as the extension install command to copy and run migrations and append spree_product_assembly to your JS manifest file.

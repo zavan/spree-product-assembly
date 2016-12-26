@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'ffaker'
   s.add_development_dependency 'launchy'
   s.add_development_dependency 'pg'
-  s.add_development_dependency 'poltergeist', '~> 1.6'
+  s.add_development_dependency 'poltergeist', '~> 1.12.0'
   s.add_development_dependency 'rspec-rails', '~> 3.5.2'
   s.add_development_dependency 'sass-rails', '~> 5.0.0'
   s.add_development_dependency 'simplecov'
