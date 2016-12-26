@@ -1,6 +1,11 @@
 ---
 ru:
   spree:
+    admin:
+      products:
+        form:
+          can_be_part: Может быть частью набора
+          individual_sale: Может продаваться отдельно
     available_parts: Доступные составные части
     can_be_part: Может входить в состав других продуктов
     individual_sale: Может продаваться отдельно
