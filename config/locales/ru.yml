@@ -17,6 +17,6 @@ ru:
     assembly_cannot_be_part: сборка не может быть частью
     product_bundles: Продукт cвязки
     parts_included: 'Детали, входящие'
-    part_of_bundle: 'Часть пучка %{sku}'
+    part_of_bundle: 'Часть набора %{sku}'
     selected_quantity_not_available:
     user_selectable: Выбирается пользователем
