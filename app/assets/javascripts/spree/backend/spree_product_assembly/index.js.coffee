@@ -1,7 +1,6 @@
 #= require ./translations
 
 $(document).ready ->
-  console.log 'it\'s work'
   Spree.routes.available_admin_product_parts = (productSlug) ->
     Spree.pathFor("admin/products/" + productSlug + "/parts/available")
 

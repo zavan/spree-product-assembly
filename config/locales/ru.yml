@@ -19,4 +19,4 @@ ru:
     parts_included: 'Детали, входящие'
     part_of_bundle: 'Часть пучка %{sku}'
     selected_quantity_not_available:
-    user_selectable:
+    user_selectable: Выбирается пользователем
