@@ -7,13 +7,6 @@ Create a product which is composed of other products.
 
 ---
 
-## About Fork
-
-All changes only in 3-0-stable branch and for spree 3.0.x
-After installing this gem to rails 4.2.6 and spree 3.0 i'd see - it work not so as it is described. Try to repair functionality.
-
----
-
 ## Installation
 
 Add the following line to your `Gemfile`
