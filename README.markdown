@@ -1,6 +1,7 @@
 # Product Assembly
 
-[![Build Status](https://travis-ci.org/r72cccp/spree-product-assembly.svg?branch=3-0-stable)](https://travis-ci.org/r72cccp/spree-product-assembly)
+[![Build Status](https://travis-ci.org/r72cccp/spree-product-assembly.svg?branch=master)](https://travis-ci.org/r72cccp/spree-product-assembly)
+[![Code Climate](https://codeclimate.com/github/r72cccp/spree-product-assembly/badges/gpa.svg)](https://codeclimate.com/github/spree-contrib/spree-product-assembly)
 
 Create a product which is composed of other products.
 
