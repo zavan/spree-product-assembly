@@ -2,7 +2,7 @@
   <%= f.field_container :can_be_part, class: ['form-group'] do %>
     <%= f.label Spree.t('.can_be_part') %>
     <%= f.error_message_on :can_be_part %>
-    <%= f.check_box :can_be_part, class: 'form-control' %>
+    <%= f.check_box :can_be_part %>
   <% end %>
 </div>
 
@@ -10,7 +10,7 @@
   <%= f.field_container :individual_sale, class: ['form-group'] do %>
     <%= f.label Spree.t('.individual_sale') %>
     <%= f.error_message_on :individual_sale %>
-    <%= f.check_box :individual_sale, class: 'form-control' %>
+    <%= f.check_box :individual_sale %>
   <% end %>
 </div>
 
