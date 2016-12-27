@@ -34,9 +34,6 @@ $(document).ready ->
 
   $("#search_parts_button").click (e) ->
     e.preventDefault()
-    e.stopPropagation()
-    console.log
-      pressed: e.target
     searchForParts()
 
   makePostRequest = (link, post_params = {}) ->
