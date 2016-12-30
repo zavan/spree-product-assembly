@@ -1,6 +1,14 @@
 ---
 ru:
   spree:
+    admin:
+      parts:
+        index:
+          search: Поиск
+      products:
+        form:
+          can_be_part: Может быть частью набора
+          individual_sale: Может продаваться отдельно
     available_parts: Доступные составные части
     can_be_part: Может входить в состав других продуктов
     individual_sale: Может продаваться отдельно
@@ -9,6 +17,6 @@ ru:
     assembly_cannot_be_part: сборка не может быть частью
     product_bundles: Продукт cвязки
     parts_included: 'Детали, входящие'
-    part_of_bundle: 'Часть пучка %{sku}'
+    part_of_bundle: 'Часть набора %{sku}'
     selected_quantity_not_available:
-    user_selectable:
+    user_selectable: Выбирается пользователем
