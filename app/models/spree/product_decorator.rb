@@ -1,7 +1,7 @@
 Spree::Product.class_eval do
-  has_many :parts, through: :assemblies_parts
   has_many :assemblies_parts, through: :variants_including_master,
            source: :parts_variants
+  has_many :parts, through: :assemblies_parts
 
   scope :individual_saled, -> { where(individual_sale: true) }
 
