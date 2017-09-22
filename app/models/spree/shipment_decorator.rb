@@ -10,25 +10,32 @@ module Spree
     #
     # TODO Can possibly be removed as well. We already override the manifest
     # partial so we can get the product there
+    ManifestItem = Struct.new(:part, :product, :line_item, :variant, :quantity, :states)
+
     def manifest
-      items = []
-      inventory_units.joins(:variant).includes(:variant, :line_item).group_by(&:variant).each do |variant, units|
+      inventory_units.group_by(&:variant_id).map do |variant, inventory_units|
+        inventory_units.group_by(&:line_item_id).map do |line_item, units|
 
-        units.group_by(&:line_item).each do |line_item, units|
-          states = {}
-          units.group_by(&:state).each { |state, iu| states[state] = iu.count }
-          line_item ||= order.find_line_item_by_variant(variant)
+          line_item = units.first.line_item
+          variant = units.first.variant
 
-          part = line_item ? line_item.product.assembly? : false
-          items << OpenStruct.new(part: part,
-                                  product: line_item.try(:product),
-                                  line_item: line_item,
-                                  variant: variant,
-                                  quantity: units.length,
-                                  states: states)
+          if Gem.loaded_specs['spree_core'].version >= Gem::Version.create('3.3.0')
+            states = units.group_by(&:state).each_with_object({}) { |(state, iu), acc| acc[state] = iu.sum(&:quantity) }
+            quantity = units.sum(&:quantity)
+          else
+            states = units.group_by(&:state).each_with_object({}) { |(state, iu), acc| acc[state] = iu.count }
+            quantity = units.length
+          end
+
+          part = line_item.try(:product).try(:assembly?) || false
+          ManifestItem.new(part,
+                           line_item.try(:product),
+                           line_item,
+                           variant,
+                           quantity,
+                           states)
         end
-      end
-      items
+      end.flatten
     end
 
     # There might be scenarios where we don't want to display every single

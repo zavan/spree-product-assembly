@@ -23,6 +23,7 @@ RSpec.feature "Checkout", type: :feature do
       click_button "Checkout"
 
       fill_in "order_email", with: "ryan@spreecommerce.com"
+      click_button "Continue"
       fill_in_address
 
       click_button "Save and Continue"
@@ -214,6 +215,7 @@ RSpec.feature "Checkout", type: :feature do
       click_button "Checkout"
 
       fill_in "order_email", with: "ryan@spreecommerce.com"
+      click_button "Continue"
       fill_in_address
 
       click_button "Save and Continue"
@@ -225,9 +227,9 @@ RSpec.feature "Checkout", type: :feature do
       expect(current_path).to eq spree.checkout_state_path("payment")
 
       click_button "Save and Continue"
-      expect(current_path).to eq spree.order_path(Spree::Order.last)
       expect(page).to have_content(shirt.name)
       expect(page).to have_content("Color: Blue")
+      expect(current_path).to eq spree.order_path(Spree::Order.last)
     end
   end
 
