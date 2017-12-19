@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :assemblies_part, class: 'Spree::AssembliesPart' do
     assembly { build(:variant) }
     part { build(:variant) }
