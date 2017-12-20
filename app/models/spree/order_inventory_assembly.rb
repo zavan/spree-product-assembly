@@ -14,7 +14,12 @@ module Spree
     def verify(shipment = nil)
       if order.completed? || shipment.present?
         line_item.quantity_by_variant.each do |part, total_parts|
-          existing_parts = line_item.inventory_units.where(variant: part).count
+
+          if Gem.loaded_specs['spree_core'].version >= Gem::Version.create('3.3.0')
+            existing_parts = line_item.inventory_units.where(variant: part).sum(&:quantity)
+          else
+            existing_parts = line_item.inventory_units.where(variant: part).count
+          end
 
           self.variant = part
 

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :part_line_item, class: 'Spree::PartLineItem' do
     line_item
     variant
