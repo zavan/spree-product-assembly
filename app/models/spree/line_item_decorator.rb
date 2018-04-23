@@ -1,6 +1,6 @@
 module Spree
   LineItem.class_eval do
-    scope :assemblies, -> { joins(product: :parts).uniq }
+    scope :assemblies, -> { joins(product: :parts).distinct }
 
     has_many :part_line_items, dependent: :destroy
 
