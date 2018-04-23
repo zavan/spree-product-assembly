@@ -18,7 +18,7 @@ Spree::Product.class_eval do
   end
 
   def assembly?
-    parts.present?
+    parts.exists?
   end
 
   def count_of(variant)

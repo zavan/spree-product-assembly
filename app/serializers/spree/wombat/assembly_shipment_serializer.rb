@@ -17,7 +17,7 @@ if defined?(Spree::Wombat)
               price: li.price.to_f
             }
 
-            if li.parts.present?
+            if li.parts.exists?
               bundled_items = []
               li.parts.each do |part|
                 bundled_items << {
