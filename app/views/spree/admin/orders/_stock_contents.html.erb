@@ -12,7 +12,7 @@
     </td>
     <td class="actions">
       <% if can? :update, shipment %>
-        <%= link_to_with_icon 'ok', Spree.t('actions.save'), '#', :class => 'save-method btn btn-default btn-sm',
+        <%= link_to_with_icon 'ok', Spree.t('actions.save'), '#', :class => 'save-method btn btn-outline-success btn-sm',
           :data => {'shipment-number' => shipment.number, :action => 'save'}, title: Spree.t('actions.save'), :no_text => true %>
         <%= link_to_with_icon 'delete', Spree.t('actions.cancel'), '#', :class => 'cancel-method btn btn-sm btn-danger',
           :data => {:action => 'cancel'}, :title => Spree.t('actions.cancel'), :no_text => true %>
@@ -48,7 +48,7 @@
   <td class="actions">
     <% if can? :update, shipment %>
       <%= link_to_with_icon 'save', Spree.t('actions.save'), '#', :class => 'save-tracking btn btn-success btn-sm', :no_text => true, :data => {'shipment-number' => shipment.number, :action => 'save'}, :title => Spree.t('actions.save') %>
-      <%= link_to_with_icon 'cancel', Spree.t('actions.cancel'), '#', :class => 'cancel-tracking btn btn-default btn-sm', :no_text => true, :data => {:action => 'cancel'}, :title => Spree.t('actions.cancel') %>
+      <%= link_to_with_icon 'cancel', Spree.t('actions.cancel'), '#', :class => 'cancel-tracking btn btn-outline-success btn-sm', :no_text => true, :data => {:action => 'cancel'}, :title => Spree.t('actions.cancel') %>
     <% end %>
   </td>
 </tr>

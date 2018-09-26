@@ -4,7 +4,9 @@
 
 <%= render :partial => 'spree/admin/shared/sub_menu/product' %>
 
-<%= render :partial => 'spree/admin/shared/product_tabs', :locals => {:current => "Parts"} %>
+<%= render :partial => 'spree/admin/shared/product_tabs',
+  :locals => {:current => "Parts"} %>
+
 <div id="product_parts" data-product-slug="<%= product.slug %>">
   <%= render :partial => "parts_table", :locals => {:parts => @parts} %>
 </div>
@@ -13,13 +15,14 @@
   <label><%= Spree.t(:search) %>:</label>
   <div class="input-group">
     <input id="searchtext" size="25" class="form-control">
-    <span class="input-group-btn">
-      <button id="search_parts_button" class="fa fa-search btn btn-search" name="button">
-        Search
+    <div class="input-group-append">
+      <button id="search_parts_button"
+        class="btn btn-primary"
+        name="button">
+        <i class="icon icon-search"></i> Search
       </button>
-    </span>
+    </div>
   </div>
 <% end %>
 
-<br/>
 <div id="search_hits"></div>
