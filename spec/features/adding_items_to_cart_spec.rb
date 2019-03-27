@@ -1,5 +1,5 @@
 RSpec.feature "Adding items to the cart", type: :feature do
-  context "when adding a bundle to the cart" do
+  context "when adding a bundle to the cart", js: true  do
     context "when none of the bundle items are packs or have options" do
       scenario "the cart lists the contents of the bundle" do
         bundle = create(:product_in_stock, name: "Bundle", sku: "BUNDLE")

@@ -26,7 +26,7 @@
                 <%- product = part.product %>
                 <%= label_tag "options_selected_variants_#{part.id}", Spree.t(:variant) %>
 
-                <%- opts = product.variants.map { |v| [variant_options(v), v.id] } %>
+                <%- opts = product.variants.map { |v| [v.options_text, v.id] } %>
                 <%- opts_disabled = product.variants.each_with_object([]) { |v, o| o << v.id if !v.in_stock? && !v.is_backorderable? } %>
 
                 <%= select_tag "options[selected_variants][#{part.id}]", options_for_select(opts, disabled: opts_disabled)%>

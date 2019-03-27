@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_backend', '>= 3.1.0', '< 4.0'
+  s.add_dependency 'spree_backend', '>= 3.1.0', '< 5.0'
   s.add_dependency 'spree_extension'
 
   s.add_development_dependency 'active_model_serializers'
@@ -31,8 +31,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'sass-rails'
   s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'sqlite3', '~> 1.3.6'
   s.add_development_dependency 'mysql2'
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'puma'
+  s.add_development_dependency 'pry-rails'
 end
