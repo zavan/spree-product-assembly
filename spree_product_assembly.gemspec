@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'spree_backend', '>= 3.1.0', '< 4.0'
   s.add_dependency 'spree_extension'
+  s.add_dependency 'deface', '~> 1.0'
 
   s.add_development_dependency 'active_model_serializers'
   s.add_development_dependency 'capybara'
