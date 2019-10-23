@@ -13,7 +13,7 @@ module Spree
 
     def submit
       if valid?
-        assemblies_part.update_attributes(attributes)
+        assemblies_part.update(attributes)
       end
     end
 
