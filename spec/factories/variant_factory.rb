@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :variant_in_stock, parent: :variant do
     transient do
-      quantity_in_stock 10
+      quantity_in_stock { 10 }
     end
 
     after(:create) do |variant, evaluator|
