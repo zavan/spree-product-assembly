@@ -17,7 +17,7 @@
         <td><%= part.name %></td>
         <td>
           <% if part.has_variants? %>
-            <%- opts = part.variants.map {|v| [variant_options(v), v.id] } %>
+            <%- opts = part.variants.map {|v| [v.options_text, v.id] } %>
             <%= select_tag "part[id]",
               options_for_select(opts),
               include_blank: Spree.t(:user_selectable), class: 'part_selector select2'

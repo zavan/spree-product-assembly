@@ -13,7 +13,7 @@
       <tr id="<%= dom_id(part, :sel)%>">
         <td><%= part.sku %></td>
         <td><%= part.name %></td>
-        <td><%= variant_options part %></td>
+        <td><%= part.options_text %></td>
         <td><%= variant_including_master_options part.assembly %></td>
         <td><%= text_field_tag :count, part.count, class: "form-control" %></td>
   	    <td class="actions">
