@@ -1,9 +1,11 @@
-Spree::Variant.class_eval do
-  has_many :parts_variants, class_name: "Spree::AssembliesPart", foreign_key: "assembly_id"
-  has_many :assemblies_variants, class_name: "Spree::AssembliesPart", foreign_key: "part_id"
+module Spree::VariantDecorator
+  def self.prepended(base)
+    base.has_many :parts_variants, class_name: "Spree::AssembliesPart", foreign_key: "assembly_id"
+    base.has_many :assemblies_variants, class_name: "Spree::AssembliesPart", foreign_key: "part_id"
 
-  has_many :assemblies, through: :assemblies_variants, class_name: "Spree::Variant", dependent: :destroy
-  has_many :parts, through: :parts_variants, class_name: "Spree::Variant", dependent: :destroy
+    base.has_many :assemblies, through: :assemblies_variants, class_name: "Spree::Variant", dependent: :destroy
+    base.has_many :parts, through: :parts_variants, class_name: "Spree::Variant", dependent: :destroy
+  end
 
   def assemblies_for(products)
     assemblies.where(id: products)
@@ -13,3 +15,5 @@ Spree::Variant.class_eval do
     assemblies.exists?
   end
 end
+
+Spree::Variant.prepend Spree::VariantDecorator
