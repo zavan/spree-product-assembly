@@ -20,9 +20,15 @@ module Spree
         end
 
         it "doesn't save line item quantity" do
-          expect { order.contents.add(variant, 10) }.to(
-            raise_error ActiveRecord::RecordInvalid
-          )
+          if Spree.version.to_f < 3.7
+            expect { order.contents.add(variant, 10) }.to(
+              raise_error ActiveRecord::RecordInvalid
+            )
+          else
+            expect { Spree::Cart::AddItem.call(order: order, variant: variant, quantity: 10) }.to(
+              raise_error ActiveRecord::RecordInvalid
+            )
+          end
         end
       end
 
@@ -36,7 +42,11 @@ module Spree
         end
 
         it "saves line item quantity" do
-          line_item = order.contents.add(variant, 10)
+          if Spree.version.to_f < 3.7
+            line_item = order.contents.add(variant, 10)
+          else
+            line_item = Spree::Cart::AddItem.call(order: order, variant: variant, quantity: 10).value
+          end
           expect(line_item).to be_valid
         end
       end

@@ -19,7 +19,13 @@ module Spree
         before { StockItem.update_all 'count_on_hand = 10' }
 
         context "bundle part requires more units than individual product" do
-          before { order.contents.add(bundle_variant, 5) }
+          before do
+            if Spree.version.to_f < 3.7
+              order.contents.add(bundle_variant, 5)
+            else
+              Spree::Cart::AddItem.call(order: order, variant: bundle_variant, quantity: 5)
+            end
+          end
 
           let(:bundle_item_quantity) { order.find_line_item_by_variant(bundle_variant).quantity }
 

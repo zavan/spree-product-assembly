@@ -6,7 +6,11 @@ module Spree
       let!(:parts) { (1..2).map { create(:variant) } }
       let!(:bundle_parts) { bundle.product.parts << parts }
 
-      let!(:line_item) { order.contents.add(bundle, 1) }
+      if Spree.version.to_f < 3.7
+        let!(:line_item) { order.contents.add(bundle, 1) }
+      else
+        let!(:line_item) { Spree::Cart::AddItem.call(order: order, variant: bundle, quantity: 1) }
+      end
       let!(:shipment) { order.create_proposed_shipments.first }
 
       before { order.update_column :state, 'complete' }

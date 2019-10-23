@@ -1,4 +1,4 @@
-RSpec.feature "Updating items in the cart", type: :feature do
+RSpec.feature "Updating items in the cart", type: :feature, js: true do
   context "when updating a bundle's quantity" do
     context "when none of the bundle items are packs or have options" do
       scenario "the quantities are multiplied by the bundle's new quantity" do
@@ -24,7 +24,8 @@ RSpec.feature "Updating items in the cart", type: :feature do
 
         click_button "update-button"
 
-        within("#cart-detail tbody tr:first-child") do
+        conainer = find_all("#cart-detail tbody tr:first-child").first
+        within(conainer) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           expect(page).to have_content("(2) Keychain (KEYCHAIN)")
@@ -61,7 +62,8 @@ RSpec.feature "Updating items in the cart", type: :feature do
 
         click_button "update-button"
 
-        within("#cart-detail tbody tr:first-child") do
+        conainer = find_all("#cart-detail tbody tr:first-child").first
+        within(conainer) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           expect(page).to have_content("(4) Keychain (KEYCHAIN)")
@@ -98,7 +100,8 @@ RSpec.feature "Updating items in the cart", type: :feature do
 
         click_button "update-button"
 
-        within("#cart-detail tbody tr:first-child") do
+        conainer = find_all("#cart-detail tbody tr:first-child").first
+        within(conainer) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           expect(page).to have_content("(2) Keychain (KEYCHAIN)")
@@ -140,8 +143,8 @@ RSpec.feature "Updating items in the cart", type: :feature do
         end
 
         click_button "update-button"
-
-        within("#cart-detail tbody tr:first-child") do
+        conainer = find_all("#cart-detail tbody tr:first-child").first
+        within(conainer) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           expect(page).to have_content("(2) Keychain (KEYCHAIN)")

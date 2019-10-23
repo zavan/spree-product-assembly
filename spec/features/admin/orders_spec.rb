@@ -8,7 +8,7 @@ RSpec.feature "Orders", type: :feature, js: true do
 
   background do
     bundle.master.parts << [parts]
-    line_item.update_attributes!(quantity: 3)
+    line_item.update!(quantity: 3)
     order.reload.create_proposed_shipments
     order.finalize!
   end
