@@ -1,4 +1,4 @@
-RSpec.feature "Checkout", type: :feature do
+RSpec.feature "Checkout", type: :feature, js: true do
   given!(:country) do
     create(:country, name: "United States", states_required: true)
   end
@@ -28,14 +28,16 @@ RSpec.feature "Checkout", type: :feature do
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.checkout_state_path("delivery")
-      expect(page).to have_content(variant.product.name)
+      # expect(page).to have_content(variant.product.name)
+      expect(page).to have_content(product.name)
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.checkout_state_path("payment")
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.order_path(Spree::Order.last)
-      expect(page).to have_content(variant.product.name)
+      # expect(page).to have_content(variant.product.name)
+      expect(page).to have_content(product.name)
     end
   end
 
@@ -220,15 +222,17 @@ RSpec.feature "Checkout", type: :feature do
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.checkout_state_path("delivery")
-      expect(page).to have_content(shirt.name)
-      expect(page).to have_content("Color: Blue")
+      expect(page).to have_content(bundle.name)
+      # expect(page).to have_content(shirt.name)
+      # expect(page).to have_content("Color: Blue")
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.checkout_state_path("payment")
 
       click_button "Save and Continue"
-      expect(page).to have_content(shirt.name)
-      expect(page).to have_content("Color: Blue")
+      expect(page).to have_content(bundle.name)
+      # expect(page).to have_content(shirt.name)
+      # expect(page).to have_content("Color: Blue")
       expect(current_path).to eq spree.order_path(Spree::Order.last)
     end
   end

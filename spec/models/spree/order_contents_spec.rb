@@ -17,7 +17,10 @@ if Spree.version.to_f < 3.7
             line_item = Spree::Cart::AddItem.call(
               order: order,
               variant: assembly.master,
-              quantity: 1
+              quantity: 1,
+              options: {
+                populate: true
+              }
             )
           end
 
@@ -80,7 +83,7 @@ if Spree.version.to_f < 3.7
               "selected_variants" => {
                 "#{assembly_part_keychain.part_id}" => "#{keychain.master.id}",
                 "#{assembly_part_shirt.part_id}" => "#{shirt.variants.last.id}"
-              }
+              }, populate: true
             })
           end
 
