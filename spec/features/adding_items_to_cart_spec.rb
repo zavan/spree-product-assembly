@@ -208,10 +208,13 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
           within all("#cart-detail .line-item")[0] do
             expect(page).to have_content(bundle.name)
-            expect(page).to have_css("input[value='2']")
-            # expect(page).to(
-            #   have_content("(1) Keychain (KEYCHAIN)")
-            # )
+            if Spree.version.to_f < 3.7
+              expect(page).to(
+                have_content("(1) Keychain (KEYCHAIN)")
+              )
+            else
+              expect(page).to have_css("input[value='2']")
+            end
             # expect(page).to(
             #   have_content("(1) Shirt (Size: Large) (SHIRT-LARGE)")
             # )
@@ -220,19 +223,21 @@ RSpec.feature "Adding items to the cart", type: :feature do
             # )
           end
 
-          # within all("#cart-detail .line-item")[1] do
-            # expect(page).to have_content(bundle.name)
-            # expect(page).to have_css("input[value='1']")
-            # expect(page).to(
-            #   have_content("(1) Keychain (KEYCHAIN)")
-            # )
-            # expect(page).to(
-            #   have_content("(1) Shirt (Size: XL) (SHIRT-XL)")
-            # )
-            # expect(page).to(
-            #   have_content("(1) Hat (Color: Blue) (HAT-BLUE)")
-            # )
-          # end
+          if Spree.version.to_f < 3.7
+            within all("#cart-detail .line-item")[1] do
+              expect(page).to have_content(bundle.name)
+              expect(page).to have_css("input[value='1']")
+              # expect(page).to(
+              #   have_content("(1) Keychain (KEYCHAIN)")
+              # )
+              # expect(page).to(
+              #   have_content("(1) Shirt (Size: XL) (SHIRT-XL)")
+              # )
+              # expect(page).to(
+              #   have_content("(1) Hat (Color: Blue) (HAT-BLUE)")
+              # )
+            end
+          end
         end
       end
 
