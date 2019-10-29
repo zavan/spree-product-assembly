@@ -8,19 +8,10 @@ module Spree::LineItemDecorator
     inventory_units.any? { |unit| unit.shipped? }
   end
 
-  # The parts that apply to this particular LineItem. Usually `product#parts`,
-  # but provided as a hook if you want to override and customize the parts for
-  # a specific LineItem.
   def parts
     product.parts
   end
 
-  # The number of the specified variant that make up this LineItem. By
-  # default, calls `product#count_of`, but provided as a hook if you want to
-  # override and customize the parts available for a specific LineItem. Note
-  # that if you only customize whether a variant is included in the LineItem,
-  # and don't customize the quantity of that part per LineItem, you shouldn't
-  # need to override this method.
   def count_of(variant)
     product.count_of(variant)
   end
@@ -43,9 +34,9 @@ module Spree::LineItemDecorator
     if (changed? || target_shipment.present?) &&
         order.has_checkout_step?("delivery")
       if product.assembly?
-        OrderInventoryAssembly.new(self).verify(target_shipment)
+        Spree::OrderInventoryAssembly.new(self).verify(target_shipment)
       else
-        OrderInventory.new(order, self).verify(target_shipment)
+        Spree::OrderInventory.new(order, self).verify(target_shipment)
       end
     end
   end

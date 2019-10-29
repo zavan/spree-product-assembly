@@ -1,5 +1,5 @@
 if Spree.version.to_f < 3.7
-  describe Spree::OrderContentsDecorator, type: :model do
+  describe Spree::OrderContents, type: :model do
     describe "#add_to_line_item" do
       context "given a variant which is an assembly" do
         it "creates a PartLineItem for each part of the assembly" do

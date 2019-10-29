@@ -70,9 +70,9 @@ module Spree::OrderContentsDecorator
 
   def whitelist(params)
     if params.is_a? ActionController::Parameters
-      params.permit(PermittedAttributes.line_item_attributes)
+      params.permit(Spree::PermittedAttributes.line_item_attributes)
     else
-      params.slice(*PermittedAttributes.line_item_attributes)
+      params.slice(Spree::PermittedAttributes.line_item_attributes)
     end
   end
 end
