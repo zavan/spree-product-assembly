@@ -265,7 +265,6 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
   def add_item_to_cart(args)
     visit spree.product_path(bundle)
-
     select "Size: #{args[:size]}", from: "options_selected_variants_3"
     select "Color: #{args[:color]}", from: "options_selected_variants_6"
     click_button "add-to-cart-button"
@@ -283,7 +282,11 @@ RSpec.feature "Adding items to the cart", type: :feature do
     option_type_presentation = args.fetch(:option_type)
     option_value_presentations = args.fetch(:option_values)
     option_values = option_value_presentations.map do |presentation|
-      create(:option_value, presentation: presentation)
+      if option_type_presentation == 'Color'
+        create(:option_value, name: presentation, presentation: presentation)
+      else
+        create(:option_value, presentation: presentation)
+      end
     end
     option_type = create(:option_type,
                          presentation: option_type_presentation,
