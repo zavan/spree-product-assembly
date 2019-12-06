@@ -178,8 +178,8 @@ RSpec.feature "Checkout", type: :feature, js: true do
 
     scenario "shows the part the User selected at all stages of checkout" do
       create :store
-      red_option = create(:option_value, presentation: "Red")
-      blue_option = create(:option_value, presentation: "Blue")
+      red_option = create(:option_value, name: "Red", presentation: "Red")
+      blue_option = create(:option_value, name: "Blue", presentation: "Blue")
 
       option_type = create(:option_type,
                            presentation: "Color",

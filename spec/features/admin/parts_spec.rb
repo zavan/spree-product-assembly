@@ -81,10 +81,14 @@ RSpec.feature "Managing parts for a product bundle", type: :feature, js: true do
         fill_in "searchtext", with: "Shirt"
         click_on "Search"
 
-        within("#search_hits") do
-          select "Color: Red", from: "part_id"
-          click_on "Select"
+        if Spree.version.to_f > 4.0
+          find('#s2id_part_id').click
+          find('div.select2-result-label', text: 'Color: Red').click
+        else
+          select 'Color: Red', from: 'part_id'
         end
+
+        click_on "Select"
 
         expect(page).to have_content(part.sku)
       end
@@ -99,8 +103,14 @@ RSpec.feature "Managing parts for a product bundle", type: :feature, js: true do
         fill_in "searchtext", with: "Shirt"
         click_on "Search"
 
-        within("#search_hits") do
+        if Spree.version.to_f > 4.0
+          find('#s2id_part_id').click
+          find('div.select2-result-label', text: Spree.t(:user_selectable)).click
+        else
           select Spree.t(:user_selectable), from: "part_id"
+        end
+
+        within("#search_hits") do
           fill_in "part_count", with: 666
           click_on "Select"
         end
