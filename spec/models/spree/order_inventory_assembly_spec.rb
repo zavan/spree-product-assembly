@@ -185,6 +185,7 @@ module Spree
           context "when the bundle is created" do
             it "produces inventory units for each item in the bundle" do
               shipment, line_item, variants = create_line_item_for_bundle(
+                line_item_quantity: 1,
                 parts: [
                   { count: 1 },
                   { count: 1 },
@@ -200,6 +201,8 @@ module Spree
               expect(get_quantity_for_inventory_units(shipment.inventory_units_for(variants[2]))).to eq 3
             end
           end
+
+          # expect(get_quantity_for_inventory_units(inventory.inventory_units)).to eq 10
 
           context "when the bundle quantity is increased" do
             it "adds [difference in quantity] sets of inventory units" do
@@ -311,12 +314,15 @@ module Spree
 
       bundle.reload
 
-      contents = Spree::OrderContents.new(order)
-      line_item = contents.add_to_line_item_with_parts(
-        bundle.master,
-        line_item_quantity,
-        selected_variants
-      )
+      line_item = Spree::Cart::AddItem.call(
+        order: order,
+        variant: bundle.master,
+        quantity: line_item_quantity,
+        options: {
+          selected_variants: selected_variants,
+          populate: true
+        }
+      ).value
       line_item.reload
 
       [shipment, line_item, variants]

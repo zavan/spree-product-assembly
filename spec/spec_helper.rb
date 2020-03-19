@@ -12,6 +12,7 @@ end
 
 require 'rspec/rails'
 require 'ffaker'
+require 'webdrivers'
 
 RSpec.configure do |config|
   config.fail_fast = false
@@ -24,6 +25,10 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |expectations|
     expectations.syntax = :expect
+  end
+
+  config.before(:each) do
+    create(:store)
   end
 end
 

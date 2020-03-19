@@ -2,6 +2,6 @@ FactoryBot.define do
   factory :part_line_item, class: 'Spree::PartLineItem' do
     line_item
     variant
-    quantity 1
+    quantity { 1 }
   end
 end

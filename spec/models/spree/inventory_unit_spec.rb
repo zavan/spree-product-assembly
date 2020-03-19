@@ -8,7 +8,7 @@ module Spree
 
     context 'if the unit is not part of an assembly' do
       it 'it will return the percentage of a line item' do
-        expect(subject.percentage_of_line_item).to eq BigDecimal.new(1)
+        expect(subject.percentage_of_line_item).to eq BigDecimal(1)
       end
     end
 
@@ -23,7 +23,7 @@ module Spree
 
       it 'it will return the percentage of a line item' do
         subject.line_item = line_item
-      	expect(subject.percentage_of_line_item).to eq BigDecimal.new(0.5, 2)
+      	expect(subject.percentage_of_line_item).to eq BigDecimal(0.5, 2)
       end
     end
   end

@@ -1,6 +1,6 @@
 module Spree
   module Stock
-    InventoryUnitBuilder.class_eval do
+    module InventoryUnitBuilderDecorator
       def units
         @order.line_items.flat_map do |line_item|
           line_item.quantity_by_variant.flat_map do |variant, quantity|
@@ -34,3 +34,5 @@ module Spree
     end
   end
 end
+
+Spree::Stock::InventoryUnitBuilder.prepend Spree::Stock::InventoryUnitBuilderDecorator
