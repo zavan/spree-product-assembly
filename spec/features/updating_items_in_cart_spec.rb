@@ -16,16 +16,15 @@ RSpec.feature "Updating items in the cart", type: :feature, js: true do
 
         visit spree.product_path(bundle)
 
-        click_button "add-to-cart-button"
+        add_to_cart
 
         within("#cart-detail") do
           find("input").set 2
         end
 
-        click_button "update-button"
+        update_form
 
-        conainer = find_all("#cart-detail tbody tr:first-child").first
-        within(conainer) do
+        within(container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           # expect(page).to have_content("(2) Keychain (KEYCHAIN)")
@@ -54,16 +53,15 @@ RSpec.feature "Updating items in the cart", type: :feature, js: true do
 
         visit spree.product_path(bundle)
 
-        click_button "add-to-cart-button"
+        add_to_cart
 
         within("#cart-detail") do
           find("input").set 2
         end
 
-        click_button "update-button"
+        update_form
 
-        conainer = find_all("#cart-detail tbody tr:first-child").first
-        within(conainer) do
+        within(container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           # expect(page).to have_content("(4) Keychain (KEYCHAIN)")
@@ -92,16 +90,15 @@ RSpec.feature "Updating items in the cart", type: :feature, js: true do
 
         visit spree.product_path(bundle)
 
-        click_button "add-to-cart-button"
+        add_to_cart
 
         within("#cart-detail") do
           find("input").set 2
         end
 
-        click_button "update-button"
+        update_form
 
-        conainer = find_all("#cart-detail tbody tr:first-child").first
-        within(conainer) do
+        within(container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           # expect(page).to have_content("(2) Keychain (KEYCHAIN)")
@@ -136,15 +133,15 @@ RSpec.feature "Updating items in the cart", type: :feature, js: true do
 
         select "Size: Medium", from: "Variant"
 
-        click_button "add-to-cart-button"
+        add_to_cart
 
         within("#cart-detail") do
           find("input").set 2
         end
 
-        click_button "update-button"
-        conainer = find_all("#cart-detail tbody tr:first-child").first
-        within(conainer) do
+        update_form
+
+        within(container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           # expect(page).to have_content("(2) Keychain (KEYCHAIN)")

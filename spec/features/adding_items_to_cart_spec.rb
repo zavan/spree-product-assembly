@@ -16,10 +16,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
         visit spree.product_path(bundle)
 
-        click_button "add-to-cart-button"
-        cart_detail = find_all('#cart-detail tbody tr:first-child')[0]
+        add_to_cart
 
-        within(cart_detail) do
+        within(container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='1']")
           # expect(page).to have_content("(1) Keychain (KEYCHAIN)")
@@ -47,11 +46,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
         visit spree.product_path(bundle)
 
-        click_button "add-to-cart-button"
+        add_to_cart
 
-        cart_detail = find_all('#cart-detail tbody tr:first-child')[0]
-
-        within(cart_detail) do
+        within(container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='1']")
           # expect(page).to have_content("(2) Keychain (KEYCHAIN)")
@@ -77,11 +74,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
           fill_in "quantity", with: 2
 
-          click_button "add-to-cart-button"
+          add_to_cart
 
-          cart_detail = find_all('#cart-detail tbody tr:first-child')[0]
-
-          within(cart_detail) do
+          within(container) do
             expect(page).to have_content(bundle.name)
             expect(page).to have_css("input[value='2']")
             # expect(page).to have_content("(4) Keychain (KEYCHAIN)")
@@ -110,11 +105,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
         visit spree.product_path(bundle)
 
-        click_button "add-to-cart-button"
+        add_to_cart
 
-        cart_detail = find_all('#cart-detail tbody tr:first-child')[0]
-
-        within(cart_detail) do
+        within(container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='1']")
           # expect(page).to have_content("(1) Keychain (KEYCHAIN)")
@@ -147,11 +140,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
         select 'Size: Medium', from: 'Variant'
 
-        click_button "add-to-cart-button"
+        add_to_cart
 
-        cart_detail = find_all('#cart-detail tbody tr:first-child')[0]
-
-        within(cart_detail) do
+        within(container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='1']")
           # expect(page).to have_content("(1) Keychain (KEYCHAIN)")
@@ -206,37 +197,15 @@ RSpec.feature "Adding items to the cart", type: :feature do
           add_item_to_cart(size: "Large", color: "Red")
           add_item_to_cart(size: "XL", color: "Blue")
 
-          within all("#cart-detail .line-item")[0] do
+          within container do
             expect(page).to have_content(bundle.name)
-            if Spree.version.to_f < 3.7
-              expect(page).to(
-                have_content("(1) Keychain (KEYCHAIN)")
-              )
-            else
-              expect(page).to have_css("input[value='2']")
-            end
+            expect(page).to have_css("input[value='2']")
             # expect(page).to(
             #   have_content("(1) Shirt (Size: Large) (SHIRT-LARGE)")
             # )
             # expect(page).to(
             #   have_content("(1) Hat (Color: Red) (HAT-RED)")
             # )
-          end
-
-          if Spree.version.to_f < 3.7
-            within all("#cart-detail .line-item")[1] do
-              expect(page).to have_content(bundle.name)
-              expect(page).to have_css("input[value='1']")
-              # expect(page).to(
-              #   have_content("(1) Keychain (KEYCHAIN)")
-              # )
-              # expect(page).to(
-              #   have_content("(1) Shirt (Size: XL) (SHIRT-XL)")
-              # )
-              # expect(page).to(
-              #   have_content("(1) Hat (Color: Blue) (HAT-BLUE)")
-              # )
-            end
           end
         end
       end
@@ -245,7 +214,7 @@ RSpec.feature "Adding items to the cart", type: :feature do
         it "contains 1 line item with incremented variants and quantities" do
           2.times { add_item_to_cart(size: "Large", color: "Red") }
 
-          within "#cart-detail .line-item" do
+          within container do
             expect(page).to have_content(bundle.name)
             expect(page).to have_css("input[value='2']")
             # expect(page).to(
@@ -267,7 +236,7 @@ RSpec.feature "Adding items to the cart", type: :feature do
     visit spree.product_path(bundle)
     select "Size: #{args[:size]}", from: "options_selected_variants_3"
     select "Color: #{args[:color]}", from: "options_selected_variants_6"
-    click_button "add-to-cart-button"
+    add_to_cart
   end
 
   def bundled_product_from_options(args)

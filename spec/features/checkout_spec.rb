@@ -20,7 +20,7 @@ RSpec.feature "Checkout", type: :feature, js: true do
       create :store
 
       add_product_to_cart
-      click_button "Checkout"
+      find("#checkout-link").click
 
       fill_in "order_email", with: "ryan@spreecommerce.com"
       click_button "Continue"
@@ -28,8 +28,6 @@ RSpec.feature "Checkout", type: :feature, js: true do
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.checkout_state_path("delivery")
-      # expect(page).to have_content(variant.product.name)
-      expect(page).to have_content(product.name)
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.checkout_state_path("payment")
@@ -55,7 +53,7 @@ RSpec.feature "Checkout", type: :feature, js: true do
 
     context "ordering assembly and the part as individual sale" do
       background do
-        visit spree.root_path
+        visit spree.products_path
         click_link variant.product.name
         click_button "add-to-cart-button"
       end
@@ -87,7 +85,7 @@ RSpec.feature "Checkout", type: :feature, js: true do
                                part_id: stick.master.id)
       bundle.reload
 
-      visit spree.root_path
+      visit spree.products_path
       click_link bundle.name
 
       within("#products") do
@@ -112,7 +110,7 @@ RSpec.feature "Checkout", type: :feature, js: true do
 
       bundle.reload
 
-      visit spree.root_path
+      visit spree.products_path
       click_link bundle.name
 
       within("#products") do
@@ -162,7 +160,7 @@ RSpec.feature "Checkout", type: :feature, js: true do
                                variant_selection_deferred: true)
       bundle.reload
 
-      visit spree.root_path
+      visit spree.products_path
       click_link bundle.name
 
       first_selectable = bundle.master.parts_variants.first.part_id
@@ -208,13 +206,15 @@ RSpec.feature "Checkout", type: :feature, js: true do
              variant_selection_deferred: true)
       bundle.reload
 
-      visit spree.root_path
+      visit spree.products_path
       click_link bundle.name
 
       select "Color: Blue", from: "Variant"
       click_button "add-to-cart-button"
+      expect(page).to have_content(Spree.t(:added_to_cart))
+      visit spree.cart_path
 
-      click_button "Checkout"
+      find("#checkout-link").click
 
       fill_in "order_email", with: "ryan@spreecommerce.com"
       click_button "Continue"
@@ -222,17 +222,12 @@ RSpec.feature "Checkout", type: :feature, js: true do
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.checkout_state_path("delivery")
-      expect(page).to have_content(bundle.name)
-      # expect(page).to have_content(shirt.name)
-      # expect(page).to have_content("Color: Blue")
 
       click_button "Save and Continue"
       expect(current_path).to eq spree.checkout_state_path("payment")
 
       click_button "Save and Continue"
       expect(page).to have_content(bundle.name)
-      # expect(page).to have_content(shirt.name)
-      # expect(page).to have_content("Color: Blue")
       expect(current_path).to eq spree.order_path(Spree::Order.last)
     end
   end
@@ -249,8 +244,10 @@ RSpec.feature "Checkout", type: :feature, js: true do
   end
 
   def add_product_to_cart
-    visit spree.root_path
+    visit spree.products_path
     click_link product.name
     click_button "add-to-cart-button"
+    expect(page).to have_content(Spree.t(:added_to_cart))
+    visit spree.cart_path
   end
 end
