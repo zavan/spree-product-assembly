@@ -16,6 +16,12 @@ end
 
 def add_to_cart
   click_button "add-to-cart-button"
-  expect(page).to have_content(Spree.t(:added_to_cart))
-  visit spree.cart_path
+  if Spree.version.to_f < 4.1
+    wait_for_condition do
+      expect(page).to have_content(Spree.t(:cart))
+    end
+  else
+    expect(page).to have_content(Spree.t(:added_to_cart))
+    visit spree.cart_path
+  end
 end

@@ -195,6 +195,7 @@ RSpec.feature "Adding items to the cart", type: :feature do
       context "and the user selects differing variants from the existing line item" do
         it "contains 2 line items of the same SKU with differing variants " do
           add_item_to_cart(size: "Large", color: "Red")
+          sleep(1)
           add_item_to_cart(size: "XL", color: "Blue")
 
           within container do
@@ -212,7 +213,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
       context "and the user selects the same variants as the existing line item" do
         it "contains 1 line item with incremented variants and quantities" do
-          2.times { add_item_to_cart(size: "Large", color: "Red") }
+          add_item_to_cart(size: "Large", color: "Red")
+          sleep(1)
+          add_item_to_cart(size: "Large", color: "Red")
 
           within container do
             expect(page).to have_content(bundle.name)
@@ -234,6 +237,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
 
   def add_item_to_cart(args)
     visit spree.product_path(bundle)
+    wait_for_condition do
+      expect(page).to have_current_path(spree.product_path(bundle))
+    end
     select "Size: #{args[:size]}", from: "options_selected_variants_3"
     select "Color: #{args[:color]}", from: "options_selected_variants_6"
     add_to_cart

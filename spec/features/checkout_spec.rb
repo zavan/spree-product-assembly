@@ -8,8 +8,8 @@ RSpec.feature "Checkout", type: :feature, js: true do
   given!(:payment_method) { create(:check_payment_method) }
   given!(:zone) { create(:zone) }
 
-  given(:product) { create(:product, name: "RoR Mug") }
-  given(:variant) { create(:variant) }
+  given!(:product) { create(:product, name: "RoR Mug") }
+  given!(:variant) { create(:variant) }
 
   stub_authorization!
 
@@ -17,8 +17,6 @@ RSpec.feature "Checkout", type: :feature, js: true do
 
   shared_context "purchases product with part included" do
     background do
-      create :store
-
       add_product_to_cart
       find("#checkout-link").click
 
@@ -175,7 +173,6 @@ RSpec.feature "Checkout", type: :feature, js: true do
     end
 
     scenario "shows the part the User selected at all stages of checkout" do
-      create :store
       red_option = create(:option_value, name: "Red", presentation: "Red")
       blue_option = create(:option_value, name: "Blue", presentation: "Blue")
 
@@ -210,9 +207,7 @@ RSpec.feature "Checkout", type: :feature, js: true do
       click_link bundle.name
 
       select "Color: Blue", from: "Variant"
-      click_button "add-to-cart-button"
-      expect(page).to have_content(Spree.t(:added_to_cart))
-      visit spree.cart_path
+      add_to_cart
 
       find("#checkout-link").click
 
@@ -245,9 +240,10 @@ RSpec.feature "Checkout", type: :feature, js: true do
 
   def add_product_to_cart
     visit spree.products_path
+    wait_for_condition do
+      expect(page).to have_current_path(spree.products_path)
+    end
     click_link product.name
-    click_button "add-to-cart-button"
-    expect(page).to have_content(Spree.t(:added_to_cart))
-    visit spree.cart_path
+    add_to_cart
   end
 end
