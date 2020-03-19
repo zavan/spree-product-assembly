@@ -4,6 +4,6 @@ class AddIdToSpreeAssembliesParts < SpreeExtension::Migration[4.2]
   end
 
   def down
-    add_column :spree_assemblies_parts, :id
+    remove_column :spree_assemblies_parts, :id
   end
 end
