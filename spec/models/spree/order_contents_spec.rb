@@ -10,19 +10,14 @@ if Spree.version.to_f < 3.7
             create(:assemblies_part, assembly: assembly.master, part: piece.master)
           end
 
-          if Spree.version.to_f < 3.7
-            contents = described_class.new(order)
-            line_item = contents.add_to_line_item_with_parts(assembly.master, 1)
-          else
-            line_item = Spree::Cart::AddItem.call(
-              order: order,
-              variant: assembly.master,
-              quantity: 1,
-              options: {
-                populate: true
-              }
-            )
-          end
+          line_item = Spree::Cart::AddItem.call(
+            order: order,
+            variant: assembly.master,
+            quantity: 1,
+            options: {
+              populate: true
+            }
+          )
 
           part_line_items = line_item.part_line_items
 
@@ -69,23 +64,12 @@ if Spree.version.to_f < 3.7
                 variant_selection_deferred: true)
           assembly.reload
 
-          if Spree.version.to_f < 3.7
-            contents = Spree::OrderContents.new(order)
-
-            line_item = contents.add_to_line_item_with_parts(assembly.master, 1, {
-              "selected_variants" => {
-                "#{assembly_part_keychain.part_id}" => "#{keychain.master.id}",
-                "#{assembly_part_shirt.part_id}" => "#{shirt.variants.last.id}"
-              }
-            })
-          else
-            Spree::Cart::AddItem.call(order: order, variant: assembly.master, quantity: 1, options: {
-              "selected_variants" => {
-                "#{assembly_part_keychain.part_id}" => "#{keychain.master.id}",
-                "#{assembly_part_shirt.part_id}" => "#{shirt.variants.last.id}"
-              }, populate: true
-            })
-          end
+          Spree::Cart::AddItem.call(order: order, variant: assembly.master, quantity: 1, options: {
+            "selected_variants" => {
+              "#{assembly_part_keychain.part_id}" => "#{keychain.master.id}",
+              "#{assembly_part_shirt.part_id}" => "#{shirt.variants.last.id}"
+            }, populate: true
+          })
 
           part_line_items = line_item.part_line_items
 

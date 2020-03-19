@@ -314,24 +314,15 @@ module Spree
 
       bundle.reload
 
-      if Spree.version.to_f < 3.7
-        contents = Spree::OrderContents.new(order)
-        line_item = contents.add_to_line_item_with_parts(
-          bundle.master,
-          line_item_quantity,
-          selected_variants
-        )
-      else
-        line_item = Spree::Cart::AddItem.call(
-          order: order,
-          variant: bundle.master,
-          quantity: line_item_quantity,
-          options: {
-            selected_variants: selected_variants,
-            populate: true
-          }
-        ).value
-      end
+      line_item = Spree::Cart::AddItem.call(
+        order: order,
+        variant: bundle.master,
+        quantity: line_item_quantity,
+        options: {
+          selected_variants: selected_variants,
+          populate: true
+        }
+      ).value
       line_item.reload
 
       [shipment, line_item, variants]
