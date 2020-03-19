@@ -1,5 +1,5 @@
 <% if @product.assemblies_parts.any? %>
-  <div class="columns col-md-12">
+  <div class="columns col-lg-12">
     <h6><%= Spree.t(:parts_included) %></h6>
 
     <% @product.variants_or_master.each do |variant| %>
