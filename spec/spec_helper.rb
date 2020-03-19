@@ -26,6 +26,10 @@ RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.syntax = :expect
   end
+
+  config.before(:each) do
+    create(:store)
+  end
 end
 
 Dir[File.join(File.dirname(__FILE__), '/support/**/*.rb')].each do |file|
