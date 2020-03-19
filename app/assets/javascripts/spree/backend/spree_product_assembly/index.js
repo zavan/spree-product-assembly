@@ -19,7 +19,8 @@
       searchUrl = Spree.routes.available_admin_product_parts(productSlug);
       return $.ajax({
         data: {
-          q: $("#searchtext").val()
+          q: $("#searchtext").val(),
+          authenticity_token: AUTH_TOKEN
         },
         dataType: 'html',
         success: function(request) {
@@ -48,6 +49,7 @@
       if (post_params == null) {
         post_params = {};
       }
+      post_params['authenticity_token'] = AUTH_TOKEN
       spinner = $("img.spinner", link.parent());
       spinner.show();
       request = $.ajax({
