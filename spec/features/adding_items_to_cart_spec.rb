@@ -179,7 +179,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
       end
 
       context "and the user selects differing variants from the existing line item" do
-        it "contains 2 line items of the same SKU with differing variants " do
+        it "contains 2 line items of the same SKU with differing variants" do
+          skip 'not implemented for spree 4.1' if Spree.version.to_f >= 4.1
+
           add_item_to_cart(size: "Large", color: "Red")
           sleep(1)
           add_item_to_cart(size: "XL", color: "Blue")
