@@ -14,11 +14,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
         add_part_to_bundle(bundle.master, keychain.master)
         add_part_to_bundle(bundle.master, shirt.master)
 
-        visit spree.product_path(bundle)
+        add_to_cart(bundle)
 
-        add_to_cart
-
-        within(container) do
+        within(cart_container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='1']")
           # expect(page).to have_content("(1) Keychain (KEYCHAIN)")
@@ -44,11 +42,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
         add_part_to_bundle(bundle.master, keychain.master, count: 2)
         add_part_to_bundle(bundle.master, shirts_by_size["small"])
 
-        visit spree.product_path(bundle)
+        add_to_cart(bundle)
 
-        add_to_cart
-
-        within(container) do
+        within(cart_container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='1']")
           # expect(page).to have_content("(2) Keychain (KEYCHAIN)")
@@ -70,13 +66,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
           add_part_to_bundle(bundle.master, keychain.master, count: 2)
           add_part_to_bundle(bundle.master, shirt.master)
 
-          visit spree.product_path(bundle)
+          add_to_cart(bundle) { fill_in "quantity", with: 2 }
 
-          fill_in "quantity", with: 2
-
-          add_to_cart
-
-          within(container) do
+          within(cart_container) do
             expect(page).to have_content(bundle.name)
             expect(page).to have_css("input[value='2']")
             # expect(page).to have_content("(4) Keychain (KEYCHAIN)")
@@ -103,11 +95,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
         add_part_to_bundle(bundle.master, keychain.master)
         add_part_to_bundle(bundle.master, shirts_by_size["small"])
 
-        visit spree.product_path(bundle)
+        add_to_cart(bundle)
 
-        add_to_cart
-
-        within(container) do
+        within(cart_container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='1']")
           # expect(page).to have_content("(1) Keychain (KEYCHAIN)")
@@ -136,13 +126,9 @@ RSpec.feature "Adding items to the cart", type: :feature do
           variant_selection_deferred: true
         )
 
-        visit spree.product_path(bundle)
+        add_to_cart(bundle) { select 'Size: Medium', from: 'Variant' }
 
-        select 'Size: Medium', from: 'Variant'
-
-        add_to_cart
-
-        within(container) do
+        within(cart_container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='1']")
           # expect(page).to have_content("(1) Keychain (KEYCHAIN)")
@@ -198,7 +184,7 @@ RSpec.feature "Adding items to the cart", type: :feature do
           sleep(1)
           add_item_to_cart(size: "XL", color: "Blue")
 
-          within container do
+          within(cart_container) do
             expect(page).to have_content(bundle.name)
             expect(page).to have_css("input[value='2']")
             # expect(page).to(
@@ -217,7 +203,7 @@ RSpec.feature "Adding items to the cart", type: :feature do
           sleep(1)
           add_item_to_cart(size: "Large", color: "Red")
 
-          within container do
+          within(cart_container) do
             expect(page).to have_content(bundle.name)
             expect(page).to have_css("input[value='2']")
             # expect(page).to(
@@ -236,13 +222,10 @@ RSpec.feature "Adding items to the cart", type: :feature do
   end
 
   def add_item_to_cart(args)
-    visit spree.product_path(bundle)
-    wait_for_condition do
-      expect(page).to have_current_path(spree.product_path(bundle))
+    add_to_cart(bundle) do
+      select "Size: #{args[:size]}", from: "options_selected_variants_3"
+      select "Color: #{args[:color]}", from: "options_selected_variants_6"
     end
-    select "Size: #{args[:size]}", from: "options_selected_variants_3"
-    select "Color: #{args[:color]}", from: "options_selected_variants_6"
-    add_to_cart
   end
 
   def bundled_product_from_options(args)

@@ -17,7 +17,7 @@ RSpec.feature "Checkout", type: :feature, js: true do
 
   shared_context "purchases product with part included" do
     background do
-      add_product_to_cart
+      add_to_cart(product)
       find("#checkout-link").click
 
       fill_in "order_email", with: "ryan@spreecommerce.com"
@@ -203,11 +203,7 @@ RSpec.feature "Checkout", type: :feature, js: true do
              variant_selection_deferred: true)
       bundle.reload
 
-      visit spree.products_path
-      click_link bundle.name
-
-      select "Color: Blue", from: "Variant"
-      add_to_cart
+      add_to_cart(bundle) { select "Color: Blue", from: "Variant" }
 
       find("#checkout-link").click
 
@@ -236,14 +232,5 @@ RSpec.feature "Checkout", type: :feature, js: true do
     select "Ohio", from: "#{address}_state_id"
     fill_in "#{address}_zipcode", with: "12345"
     fill_in "#{address}_phone", with: "(555) 555-5555"
-  end
-
-  def add_product_to_cart
-    visit spree.products_path
-    wait_for_condition do
-      expect(page).to have_current_path(spree.products_path)
-    end
-    click_link product.name
-    add_to_cart
   end
 end

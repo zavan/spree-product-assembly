@@ -14,17 +14,15 @@ RSpec.feature "Updating items in the cart", type: :feature, js: true do
         add_part_to_bundle(bundle.master, keychain.master)
         add_part_to_bundle(bundle.master, shirt.master)
 
-        visit spree.product_path(bundle)
-
-        add_to_cart
+        add_to_cart(bundle)
 
         within("#cart-detail") do
           find("input").set 2
         end
 
-        update_form
+        update_cart
 
-        within(container) do
+        within(cart_container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           # expect(page).to have_content("(2) Keychain (KEYCHAIN)")
@@ -51,17 +49,15 @@ RSpec.feature "Updating items in the cart", type: :feature, js: true do
         add_part_to_bundle(bundle.master, keychain.master, count: 2)
         add_part_to_bundle(bundle.master, shirts_by_size["small"])
 
-        visit spree.product_path(bundle)
-
-        add_to_cart
+        add_to_cart(bundle)
 
         within("#cart-detail") do
           find("input").set 2
         end
 
-        update_form
+        update_cart
 
-        within(container) do
+        within(cart_container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           # expect(page).to have_content("(4) Keychain (KEYCHAIN)")
@@ -88,17 +84,15 @@ RSpec.feature "Updating items in the cart", type: :feature, js: true do
         add_part_to_bundle(bundle.master, keychain.master)
         add_part_to_bundle(bundle.master, shirts_by_size["small"])
 
-        visit spree.product_path(bundle)
-
-        add_to_cart
+        add_to_cart(bundle)
 
         within("#cart-detail") do
           find("input").set 2
         end
 
-        update_form
+        update_cart
 
-        within(container) do
+        within(cart_container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           # expect(page).to have_content("(2) Keychain (KEYCHAIN)")
@@ -129,19 +123,15 @@ RSpec.feature "Updating items in the cart", type: :feature, js: true do
           variant_selection_deferred: true
         )
 
-        visit spree.product_path(bundle)
-
-        select "Size: Medium", from: "Variant"
-
-        add_to_cart
+        add_to_cart(bundle) { select "Size: Medium", from: "Variant" }
 
         within("#cart-detail") do
           find("input").set 2
         end
 
-        update_form
+        update_cart
 
-        within(container) do
+        within(cart_container) do
           expect(page).to have_content(bundle.name)
           expect(page).to have_css("input[value='2']")
           # expect(page).to have_content("(2) Keychain (KEYCHAIN)")
