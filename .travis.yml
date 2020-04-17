@@ -37,3 +37,6 @@ before_install:
 matrix:
   allow_failures:
     - gemfile: gemfiles/spree_master.gemfile
+  exclude:
+    - rvm: 2.6.5
+      gemfile: gemfiles/spree_3_7.gemfile
