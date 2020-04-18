@@ -16,8 +16,8 @@ env:
 language: ruby
 
 rvm:
-  - 2.5.1
-  - 2.4.4
+  - 2.5.7
+  - 2.6.5
 
 gemfile:
   - gemfiles/spree_3_7.gemfile
@@ -38,9 +38,5 @@ matrix:
   allow_failures:
     - gemfile: gemfiles/spree_master.gemfile
   exclude:
-    - rvm: 2.4.4
-      gemfile: gemfiles/spree_4_0.gemfile
-    - rvm: 2.4.4
-      gemfile: gemfiles/spree_4_1.gemfile
-    - rvm: 2.4.4
-      gemfile: gemfiles/spree_master.gemfile
+    - rvm: 2.6.5
+      gemfile: gemfiles/spree_3_7.gemfile
