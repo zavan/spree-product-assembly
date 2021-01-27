@@ -50,9 +50,9 @@ See corresponding [guidelines][1].
 
 ---
 
-Copyright (c) 2007-2020 [Spree Commerce Inc.][2] and [contributors][3], released under the [New BSD License][4]
+Copyright (c) 2007-2021 [Spree Commerce Inc.][2] and [contributors][3], released under the [New BSD License][4]
 
-[1]: http://guides.spreecommerce.com/developer/contributing.html
+[1]: http://guides.spreecommerce.org/developer/contributing.html
 [2]: https://github.com/spree
 [3]: https://github.com/spree-contrib/spree-product-assembly/graphs/contributors
 [4]: https://github.com/spree-contrib/spree-product-assembly/blob/master/LICENSE.md
