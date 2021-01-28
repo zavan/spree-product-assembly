@@ -3,6 +3,9 @@ module Spree
     module CheckoutControllerDecorator
       # Override because we don't want to remove unshippable items from the order
       # A bundle itself is an unshippable item
+
+      private
+
       def before_payment
         if @order.checkout_steps.include? 'delivery'
           packages = @order.shipments.map(&:to_package)
