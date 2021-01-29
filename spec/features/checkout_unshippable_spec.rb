@@ -1,4 +1,4 @@
-RSpec.feature "Checkout", type: :feature, js: true do
+RSpec.feature "Checkout unshipabble", type: :feature, js: true do
   describe 'checkout with unshippable items', type: :feature, js: true do
     let!(:stock_location) { create(:stock_location) }
     let(:order) { OrderWalkthrough.up_to(:delivery) }
