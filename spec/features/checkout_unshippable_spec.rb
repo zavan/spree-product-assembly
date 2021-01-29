@@ -40,7 +40,7 @@ RSpec.feature "Checkout unshipabble", type: :feature, js: true do
     end
 
     it 'keeps bundle in order' do
-      expect(order.products).to inlcude bundle
+      expect(order.products).to include bundle
     end
   end
 end
