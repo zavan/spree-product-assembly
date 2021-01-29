@@ -10,7 +10,7 @@ module Spree
         if @order.checkout_steps.include? 'delivery'
           packages = @order.shipments.map(&:to_package)
           @differentiator = Spree::Stock::Differentiator.new(@order, packages)
-          @differentiator.missing.reject{ |variant| variant.try(:parts).try(:any?) }.each do |variant, quantity|
+          @differentiator.missing.reject { |variant| variant.try(:parts).try(:any?) }.each do |variant, quantity|
             Spree::Dependencies.cart_remove_item_service.constantize.call(order: @order, variant: variant, quantity: quantity)
           end
         end
