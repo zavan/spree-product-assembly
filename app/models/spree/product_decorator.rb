@@ -23,6 +23,10 @@ module Spree::ProductDecorator
     parts.exists?
   end
 
+  def deferred_parts_quantities?
+    assemblies_parts.where(quantity_selection_deferred: true).any?
+  end
+
   def count_of(variant)
     ap = assemblies_part(variant)
     # This checks persisted because the default count is 1

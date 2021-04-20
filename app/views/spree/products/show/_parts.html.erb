@@ -1,40 +1,84 @@
 <% if @product.assemblies_parts.any? %>
-  <div class="columns col-lg-12">
+  <div class="columns mt-5 col-lg-12">
     <h6><%= Spree.t(:parts_included) %></h6>
 
-    <% @product.variants_or_master.each do |variant| %>
-      <ul id="products" class="inline product-listing list-unstyled assemblies_variant assemblies_for_variant_<%= variant.id %>" data-hook style='display:none;'>
-        <% variant.parts_variants.includes(:part).each do |part_variant| %>
-          <%- part = part_variant.part %>
-
-          <li id="product_<%= part.product.id %>" class="columns three <%= cycle("alpha", "secondary", "", "omega secondary") %>" data-hook="products_list_item" itemscope itemtype="http://schema.org/Product">
-            <div class="product-image">
-              <%= link_to small_image(part.product, itemprop: "name"), part.product %>
-            </div>
-            <%= link_to truncate(part.product.name, length: 50), part.product, class: 'info', itemprop: "name", title: part.product.name %>
-
-            <%- if !part.in_stock? && !part_variant.variant_selection_deferred? %>
-              <%- if part.is_backorderable? %>
-                <div class="on-backorder"><%= Spree.t(:backorderable) %></div>
-              <%- else %>
-                <div class="out-of-stock"><%= Spree.t(:out_of_stock) %></div>
-              <%- end %>
-            <%- end %>
-
-            <%- if part_variant.variant_selection_deferred? %>
-              <div class="variant-selection-deferred">
-                <%- product = part.product %>
-                <%= label_tag "options_selected_variants_#{part.id}", Spree.t(:variant) %>
-
-                <%- opts = product.variants.map { |v| [v.options_text, v.id] } %>
-                <%- opts_disabled = product.variants.each_with_object([]) { |v, o| o << v.id if !v.in_stock? && !v.is_backorderable? } %>
-
-                <%= select_tag "options[selected_variants][#{part.id}]", options_for_select(opts, disabled: opts_disabled)%>
-              </div>
-            <%- end %>
-          </li>
+    <% if @product.deferred_parts_quantities? %>
+      <p>
+        <% if @product.min_parts_quantity == @product.max_parts_quantity %>
+          Please select <%= @product.min_parts_quantity %> items.
+        <% else %>
+          <% if @product.max_parts_quantity.present? %>
+            Please select between <%= @product.min_parts_quantity %> and <%= @product.max_parts_quantity %> items.
+          <% else %>
+            Please select a minimum of <%= @product.min_parts_quantity %> items.
+          <% end %>
         <% end %>
-      </ul>
+      </p>
     <% end %>
+
+    <% @product.variants_or_master.each do |variant| %>
+      <table class="table assemblies_variant assemblies_for_variant_<%= variant.id %>" data-min="<%= @product.min_parts_quantity %>" data-max="<%= @product.max_parts_quantity.to_i %>" style='display:none;'>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Product</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% variant.parts_variants.includes(:part).each do |part_variant| %>
+            <% part = part_variant.part %>
+            <tr>
+              <td>
+                <div class="product-image">
+                  <%= link_to small_image(part.product, itemprop: "name", style: 'max-width: 60px;'), part.product %>
+                </div>
+              </td>
+
+              <td>
+                <%= link_to truncate(part.product.name, length: 50), part.product, class: 'info', itemprop: "name", title: part.product.name %>
+
+                <%- if part_variant.variant_selection_deferred? %>
+                  <div class="variant-selection-deferred">
+                    <%- product = part.product %>
+                    <%- opts = product.variants.map { |v| [v.options_text, v.id] } %>
+                    <%- opts_disabled = product.variants.each_with_object([]) { |v, o| o << v.id if !v.in_stock? && !v.is_backorderable? } %>
+
+                    <%= select_tag "options[selected_variants][#{part.id}]", options_for_select(opts, disabled: opts_disabled), style: 'width: 100%;' %>
+                  </div>
+                <%- end %>
+
+                <%- if !part.in_stock? && !part_variant.variant_selection_deferred? %>
+                  <%- if part.is_backorderable? %>
+                    <div class="on-backorder"><%= Spree.t(:backorderable) %></div>
+                  <%- else %>
+                    <div class="out-of-stock"><%= Spree.t(:out_of_stock) %></div>
+                  <%- end %>
+                <%- end %>
+              </td>
+
+              <td>
+                <%- if part_variant.quantity_selection_deferred? %>
+                  <div class="d-inline-flex quantity-select">
+                    <%= button_tag '-', type: 'button', class: "border-right-0 flex-grow-0 flex-shrink-0 py-0 px-3 quantity-select-decrease" %>
+
+                    <%= number_field_tag "options[count][#{part.id}]", part_variant.count, min: 0, max: @product.max_parts_quantity, class: "p-0 flex-grow-1 flex-shrink-1 text-center form-control border-left-0 border-right-0 quantity-select-value", 'aria-label': Spree.t('pdp.quantity') %>
+
+                    <%= button_tag '+', type: 'button', class: "border-left-0  flex-grow-0 flex-shrink-0 py-0 px-3 quantity-select-increase" %>
+                  </div>
+                <% else %>
+                  <%= hidden_field_tag "options[count][#{part.id}]", part_variant.count, class: 'quantity-select-value' %>
+                  <p class="text-center"><%= part_variant.count %></p>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <p class="alert alert-warning small parts-message" style="display: none;"></p>
+    <% end %>
+
   </div>
 <% end %>

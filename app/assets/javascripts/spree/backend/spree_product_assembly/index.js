@@ -32,6 +32,7 @@
         url: searchUrl
       });
     };
+
     $("#searchtext").keypress(function(e) {
       if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
         searchForParts();
@@ -40,10 +41,12 @@
         return true;
       }
     });
+
     $("#search_parts_button").click(function(e) {
       e.preventDefault();
       return searchForParts();
     });
+
     makePostRequest = function(link, post_params) {
       var request, spinner;
       if (post_params == null) {
@@ -64,6 +67,7 @@
       });
       return false;
     };
+
     searchResults.on("click", "a.add_product_part_link", function(event) {
       var link, loadingIndicator, part, quantityField, row, selectedVariantOption;
       event.preventDefault();
@@ -71,7 +75,8 @@
       link = $(this);
       row = $("#" + link.data("target"));
       loadingIndicator = $("img.spinner", link.parent());
-      quantityField = $('input:last', row);
+      quantityField = $('input[type="number"]', row);
+      part.quantity_selection_deferred = row.find("[name='part[quantity_selection_deferred]']").is(':checked');
       part.count = quantityField.val();
       if (row.hasClass("with-variants")) {
         selectedVariantOption = $('select.part_selector option:selected', row);
@@ -88,13 +93,18 @@
         assemblies_part: part
       });
     });
+
     partsTable.on("click", "a.set_count_admin_product_part_link", function() {
-      var params;
-      params = {
-        count: $("input", $(this).parent().parent()).val()
+      var row = $(this).parent().parent();
+
+      var params = {
+        count: row.find('input[type="number"]').val(),
+        quantity_selection_deferred: row.find("input[name='quantity_selection_deferred']").is(':checked'),
       };
+
       return makePostRequest($(this), params);
     });
+
     return partsTable.on("click", "a.remove_admin_product_part_link", function() {
       return makePostRequest($(this));
     });

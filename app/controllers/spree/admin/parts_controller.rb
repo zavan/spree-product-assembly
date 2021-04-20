@@ -53,11 +53,12 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
         :count,
         :part_id,
         :assembly_id,
-        :variant_selection_deferred
+        :variant_selection_deferred,
+        :quantity_selection_deferred
       )
     end
 
     def existing_part_params
-      params.permit(:id, :count)
+      params.permit(:id, :count, :quantity_selection_deferred)
     end
 end

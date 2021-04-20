@@ -51,6 +51,10 @@ module Spree
       part_options[:variant_selection_deferred]
     end
 
+    def quantity_selection_deferred?
+      part_options[:quantity_selection_deferred]
+    end
+
     def quantity
       part_options[:count].to_i
     end
@@ -62,6 +66,7 @@ module Spree
         else
           Spree::AssembliesPart.find_or_initialize_by(
             variant_selection_deferred: variant_selection_deferred?,
+            quantity_selection_deferred: quantity_selection_deferred?,
             assembly_id: assembly_id,
             part_id: part_id
           )

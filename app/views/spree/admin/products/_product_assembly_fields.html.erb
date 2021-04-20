@@ -1,17 +1,43 @@
-<div data-hook="admin_product_form_can_be_part">
-  <%= f.field_container :can_be_part, class: ['form-group'] do %>
-    <%= f.label :can_be_part %>
-    <%= f.error_message_on :can_be_part %>
-    <%= f.check_box :can_be_part, class: 'form-control' %>
-  <% end %>
-</div>
+<div class="mt-4">
+  <h5>Bundle Options</h5>
 
-<div data-hook="admin_product_form_individual_sale">
-  <%= f.field_container :individual_sale, class: ['form-group'] do %>
-    <%= f.label :individual_sale %>
-    <%= f.error_message_on :individual_sale %>
-    <%= f.check_box :individual_sale, class: 'form-control' %>
-  <% end %>
+  <div class="mt-3" data-hook="admin_product_form_can_be_part">
+    <%= f.field_container :can_be_part, class: ['form-group', 'form-check'] do %>
+      <%= f.check_box :can_be_part, class: 'form-check-input' %>
+      <%= f.label :can_be_part, class: 'form-check-label' %>
+      <%= f.error_message_on :can_be_part %>
+      <p><small class="text-muted">Check if you want to use this product as part of a bundle.</small></p>
+    <% end %>
+  </div>
+
+  <div data-hook="admin_product_form_individual_sale">
+    <%= f.field_container :individual_sale, class: ['form-group', 'form-check'] do %>
+      <%= f.check_box :individual_sale, class: 'form-check-input' %>
+      <%= f.label :individual_sale, class: 'form-check-label' %>
+      <%= f.error_message_on :individual_sale %>
+      <p><small class="text-muted">Check if this product can be sold individually. If unchecked, buyers won't be able to add the product to the cart individually, only as part of a bundle.</small></p>
+    <% end %>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <%= f.field_container :min_parts_quantity, class: ['form-group', 'form-check'] do %>
+        <%= f.label :min_parts_quantity, 'Minimum subproducts quantity' %>
+        <%= f.number_field :min_parts_quantity, min: 0, class: 'form-control' %>
+        <%= f.error_message_on :min_parts_quantity %>
+        <p><small class="text-muted">Minimum total quantity of subproducts that the user is required to select.</small></p>
+      <% end %>
+    </div>
+
+    <div class="col">
+      <%= f.field_container :max_parts_quantity, class: ['form-group', 'form-check'] do %>
+        <%= f.label :max_parts_quantity, 'Maximum subproducts quantity' %>
+        <%= f.number_field :max_parts_quantity, default: 1, class: 'form-control' %>
+        <%= f.error_message_on :max_parts_quantity %>
+        <p><small class="text-muted">Maximum total quantity of subproducts that the user is able to select. Unlimited if empty.</small></p>
+      <% end %>
+    </div>
+  </div>
 </div>
 
 <% if @product.assembly? %>

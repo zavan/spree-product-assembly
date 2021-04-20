@@ -1,12 +1,13 @@
 <table class="table">
   <thead>
-  	<tr>
-  	  <th><%= Spree.t(:sku) %></th>
-  		<th><%= Spree.t(:name) %></th>
+    <tr>
+      <th><%= Spree.t(:sku) %></th>
+      <th><%= Spree.t(:name) %></th>
       <th><%= Spree.t(:options) %></th>
       <th><%= Spree.t(:variant) %></th>
-  		<th><%= Spree.t(:qty) %></th>
-  	</tr>
+      <th><%= Spree.t(:qty) %></th>
+      <th><%= Spree.t(:quantity_selection_deferred) %></th>
+    </tr>
   </thead>
   <tbody>
     <% parts.each do |part| %>
@@ -15,8 +16,12 @@
         <td><%= part.name %></td>
         <td><%= part.options_text %></td>
         <td><%= variant_including_master_options part.assembly %></td>
-        <td><%= text_field_tag :count, part.count, class: "form-control" %></td>
-  	    <td class="actions">
+        <td><%= number_field_tag :count, part.count, min: 1, class: "form-control" %></td>
+        <td>
+          <%= hidden_field_tag :quantity_selection_deferred, 'false' %>
+          <%= check_box_tag :quantity_selection_deferred, true, part.quantity_selection_deferred? %>
+        </td>
+        <td class="actions">
           <%= image_tag "spinner.gif", :style => "display:none", :class => "spinner" %>
           <%= link_to_with_icon("edit", Spree.t("edit"),
                       set_count_admin_product_part_url(product, part),
@@ -25,7 +30,7 @@
           <%= link_to_with_icon("delete", Spree.t("delete"),
                       remove_admin_product_part_url(product, part),
                       :class => "remove_admin_product_part_link btn btn-danger btn-sm delete-resource", :no_text => true) %>
-  	    </td>
+        </td>
       </tr>
     <% end %>
     <% if parts.empty? %>
