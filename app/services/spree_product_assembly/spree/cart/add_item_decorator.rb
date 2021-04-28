@@ -62,7 +62,7 @@ module SpreeProductAssembly
         end
 
         def quantity_for(part, options)
-          if part.variant_selection_deferred?
+          if part.quantity_selection_deferred?
             options[:parts_quantities][part.part.id.to_s].to_i
           else
             part.count
