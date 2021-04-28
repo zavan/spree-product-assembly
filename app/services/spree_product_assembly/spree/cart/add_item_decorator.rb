@@ -38,12 +38,15 @@ module SpreeProductAssembly
         def populate_part_line_items(line_item:, options:)
           parts = line_item.variant.parts_variants
           parts.each do |part|
+            part_qty = quantity_for(part, options)
+            next if part_qty.zero?
+
             part_line_item = line_item.part_line_items.find_or_initialize_by(
               line_item: line_item,
               variant_id: variant_id_for(part, options)
             )
 
-            part_line_item.quantity = quantity_for(part, options)
+            part_line_item.quantity = part_qty
           end
 
           line_item.part_line_items.each(&:save!)
